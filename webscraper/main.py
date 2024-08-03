@@ -89,7 +89,7 @@ def get_max_page(soup):
 
 
 # [7] function to produce a spreadsheet
-def export_excel(first_list, second_list, third_list):
+def export_file(first_list, second_list, third_list, file_type="excel"):
     BBC = {}
     BBC['News Header'] = first_list
     BBC['Time'] = second_list
@@ -98,7 +98,10 @@ def export_excel(first_list, second_list, third_list):
     output_dir = "./spreadsheets/" # output directory
     if not os.path.exists(output_dir): # if the directory does not exist, create it
         os.makedirs(output_dir)
-    df.to_excel(os.path.join(output_dir, 'BBC_webscraped_from_python.xlsx'), index=False)
+    if file_type == "excel": # default file type
+        df.to_excel(os.path.join(output_dir, 'BBC_webscraped_from_python.xlsx'), index=False)
+    elif file_type == "csv":
+        df.to_csv(os.path.join(output_dir, 'BBC_webscraped_from_python.csv'), index=False)
     return df
 
 
@@ -141,7 +144,7 @@ def main(web_url):
         except AttributeError: # scraping the page after the last page will cause error
             print("The end of the pages is reached.")
 
-    return export_excel(news_headers, datetime, contents) # export the spreadsheet # return df
+    return export_file(news_headers, datetime, contents, "csv") # export the spreadsheet # return df
 
 
 # run the main
