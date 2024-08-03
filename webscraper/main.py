@@ -2,6 +2,7 @@
 import pandas as pd
 import requests  # this module helps us to download a web page
 from bs4 import BeautifulSoup  # this module helps in web scrapping
+import os
 
 
 # [1] function to get soup with URL input
@@ -37,7 +38,7 @@ def content_scraper(content_url, soup):
                 if (char.lower() in alphabets) or (char in symbols): # do not add non-Burmese characters or symbols
                     continue
                 burmese_content += char # add Burmese characters only
-        except TypeError:
+        except AttributeError:
             continue # skip if there is None
     return burmese_content
 
@@ -94,7 +95,10 @@ def export_excel(first_list, second_list, third_list):
     BBC['Time'] = second_list
     BBC['Content'] = third_list
     df = pd.DataFrame({key:pd.Series(value) for key, value in BBC.items()})
-    df.to_excel('../spreadsheets/BBC_webscraped_from_python.xlsx', index=False)
+    output_dir = "./spreadsheets/" # output directory
+    if not os.path.exists(output_dir): # if the directory does not exist, create it
+        os.makedirs(output_dir)
+    df.to_excel(os.path.join(output_dir, 'BBC_webscraped_from_python.xlsx'), index=False)
     return df
 
 
