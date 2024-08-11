@@ -23,4 +23,4 @@ def format_csv(file):
 
 
 # Change the file name to the file you want to format
-# format_csv('./spreadsheets/BBC_webscraped.csv')
+# Example- format_csv('./spreadsheets/BBC_webscraped.csv')

@@ -95,13 +95,22 @@ def export_file(first_list, second_list, third_list, file_type="excel"):
     BBC['Time'] = second_list
     BBC['Content'] = third_list
     df = pd.DataFrame({key:pd.Series(value) for key, value in BBC.items()})
-    output_dir = "./spreadsheets/" # output directory
+
+    output_dir = "../spreadsheets/" # output directory
     if not os.path.exists(output_dir): # if the directory does not exist, create it
         os.makedirs(output_dir)
+
+    print("Exporting BBC Burmese...")
+
     if file_type == "excel": # default file type
         df.to_excel(os.path.join(output_dir, 'BBC_webscraped_from_python.xlsx'), index=False)
+        print("Excel exported.")
     elif file_type == "csv":
         df.to_csv(os.path.join(output_dir, 'BBC_webscraped_from_python.csv'), index=False)
+        print("CSV exported.")
+
+    print("Exporting BBC Burmese... Done")
+
     return df
 
 
@@ -128,7 +137,7 @@ def main(web_url):
     # from the second page to the last page
     for _i in range(last_page_index):
         try:
-            print(complete_url)
+            print("scraping:", complete_url)
             complete_url = navigate_next_page(web_url, soup) # get next url
             soup = web_scraper(complete_url) # get soup
             news_headers_soup, datetime_soup = soup_parser(soup) # get specific elements in a soup
@@ -149,6 +158,8 @@ def main(web_url):
 
 # run the main
 if __name__ == "__main__":
+    print("Webscraping BBC Burmese...")
     df = main("https://www.bbc.com/burmese/topics/c9wpm0en9jdt")
     print(df)
-    print("Done")
+    print("Webscraping BBC Burmese... Done")
+
