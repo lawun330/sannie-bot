@@ -9,7 +9,7 @@ def format_csv(file):
     # Define a new file name and path
     file_name = os.path.basename(file)
     file_name_without_extension = file_name.split('.')[0]
-    file_path = os.path.join('./spreadsheets/', file_name_without_extension + '_formatted.csv')
+    file_path = os.path.join('../spreadsheets/', file_name_without_extension + '_formatted.csv')
 
     df = pd.read_csv(file)
 
@@ -21,6 +21,6 @@ def format_csv(file):
 
     print(f'File {file} formatted and saved as {file_path}')
 
-
 # Change the file name to the file you want to format
 # Example- format_csv('./spreadsheets/BBC_webscraped.csv')
+format_csv('../spreadsheets/BBC_webscraped.csv')
