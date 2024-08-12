@@ -1,8 +1,8 @@
 # import libraries
+import os
 import pandas as pd
 import requests  # this module helps us to download a web page
 from bs4 import BeautifulSoup  # this module helps in web scrapping
-import os
 
 
 # [1] function to get soup with URL input

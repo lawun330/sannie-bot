@@ -1,4 +1,6 @@
+# import libraries
 import boto3
+
 
 def show_custom_lines_from_dynamodb(table_name, limit):
     dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000")

@@ -1,4 +1,6 @@
+# import libraries
 import boto3
+
 
 def create_dynamodb_table(table_name):
     dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000") # note that it is not 'https' but 'http'

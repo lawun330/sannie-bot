@@ -1,10 +1,11 @@
 '''
 This script formats a csv file by adding a new column to the left with a unique id created from hashing the dataframe
 '''
-
-import pandas as pd
+# import libraries
 import os
 import sys
+import pandas as pd
+
 
 def format_csv(file): # change the file name to the file you want to format
 
@@ -18,7 +19,7 @@ def format_csv(file): # change the file name to the file you want to format
 
     # Adding a new column to the left with a unique id created from hashing the dataframe
     df.insert(0, 'uuid', pd.util.hash_pandas_object(df).astype(str))
-    
+
     # Make a new csv file
     df.to_csv(file_path, index=False)
     print(f'File "{file}" formatted and saved as "{file_path}"!')

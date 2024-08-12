@@ -1,8 +1,6 @@
 # import libraries
-import boto3
-import pandas as pd
-import sys
 import os
+import sys
 
 # import functions from modules
 from create_table import create_dynamodb_table

@@ -1,5 +1,7 @@
+# import libraries
 import boto3
 import pandas as pd
+
 
 def upload_csv_to_dynamodb(csv_file_path, table_name):
     # read csv
@@ -11,7 +13,7 @@ def upload_csv_to_dynamodb(csv_file_path, table_name):
 
     # put csv into table
     with table.batch_writer() as batch:
-        for index, row in df.iterrows():
+        for _index, row in df.iterrows():
             item = row.to_dict() # convert row to dict
             item['uuid'] = str(item['uuid']) # change uuid to string
             batch.put_item(Item=item) # put item to db
