@@ -21,7 +21,8 @@ def format_csv(file): # change the file name to the file you want to format
     
     # Make a new csv file
     df.to_csv(file_path, index=False)
-    print(f'File {file} formatted and saved as {file_path}')
+    print(f'File "{file}" formatted and saved as "{file_path}"!')
+    return file_path
 
 # Run the script from the command line
 if __name__ == "__main__":
@@ -35,4 +36,5 @@ if __name__ == "__main__":
         print(f"Error: File {csv_file_path} does not exist.")
         sys.exit(1) # exit if the file does not exist
 
-    format_csv(csv_file_path)
+    formatted_csv_path = format_csv(csv_file_path)
+
