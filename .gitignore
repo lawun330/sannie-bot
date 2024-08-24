@@ -2,3 +2,4 @@ notebooks/.ipynb_checkpoints/
 db/__pycache__/
 spreadsheets/BBC_webscraped_from_python.csv
 spreadsheets/BBC_webscraped_from_python_formatted.csv
+spreadsheets/
