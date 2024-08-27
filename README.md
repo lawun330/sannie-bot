@@ -1,5 +1,7 @@
 # Custom-Webscraper
 
+This project is currently under development.
+
 This repository contains necessary files to webscrape contents from-
 1. BBC Burmese
 2. Yangon Khit Thit Media
@@ -13,7 +15,8 @@ There are several folders and files in this repository-
 - The _notebooks_ folder contains the jupyter notebooks used to develop and document the progress.
 - The _spreadsheets_ folder contains the exported spreadsheets.
 - The _db_ folder contains the DynamoDBLocal database and related files.
-- The _webscraper_ folder contains the main pythonscript to perform the webscraping.
+- The _webscraper_ folder contains the main Python script to perform the webscraping.
+    - During development, I recommend you to check _notebooks_ instead because the main script is not always updated. 
 - The _pyproject.toml_ file contains the project dependencies and settings for a ruff check.
 
 *Note that you may have to install libraries and modules.*
