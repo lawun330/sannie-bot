@@ -1,3 +1,5 @@
+'''This script creates a table in DyanmoDB.'''
+
 # import libraries
 import boto3
 

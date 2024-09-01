@@ -1,11 +1,14 @@
+'''This script uses other three modules to create a DynamoDB table, add items, and query an item.'''
+
 # import libraries
 import os
 import sys
 
 # import functions from modules
-from create_table import create_dynamodb_table
-from csv_to_db import upload_csv_to_dynamodb
-from query_test import show_custom_lines_from_dynamodb
+from db.create_table import create_dynamodb_table
+from db.csv_to_db import upload_csv_to_dynamodb
+from db.query_item import show_custom_lines_from_dynamodb
+
 
 # Run the script from the command line
 if __name__ == "__main__":

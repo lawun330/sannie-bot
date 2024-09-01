@@ -1,6 +1,5 @@
-'''
-This script formats a csv file by adding a new column to the left with a unique id created from hashing the dataframe
-'''
+'''This script formats a csv file by adding a new column to the left with a unique id created from hashing the dataframe.'''
+
 # import libraries
 import os
 import sys
@@ -38,4 +37,3 @@ if __name__ == "__main__":
         sys.exit(1) # exit if the file does not exist
 
     formatted_csv_path = format_csv(csv_file_path)
-

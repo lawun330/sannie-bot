@@ -1,3 +1,5 @@
+'''This script puts CSV entries into the DynamoDB table.'''
+
 # import libraries
 import boto3
 import pandas as pd

@@ -1,3 +1,5 @@
+'''This script queries an item from the DynamoDB table.'''
+
 # import libraries
 import boto3
 
