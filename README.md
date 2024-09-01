@@ -6,7 +6,7 @@ Initially, this repository contains necessary files to webscrape contents from-
 1. BBC Burmese
 2. Yangon Khit Thit Media
 
-For our project specification, I have chosen the **BBC Burmese**.
+For the specific implementation, I chose the **BBC Burmese**.
 
 ## Files and Directories
 There are several folders and files in this repository-
