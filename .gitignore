@@ -4,3 +4,4 @@ spreadsheets/
 __pycache__/
 db/__pycache__/
 webscraper/__pycache__/
+.env
