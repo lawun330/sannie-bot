@@ -1,7 +1,7 @@
 body {
     background-color: #ffffff;
     color: #000000;
-    background-image: url('../../img/bbc_news_background_by_danielcummings.jpg');
+    background-image: url('../img/bbc_news_background_by_danielcummings.jpg');
     background-size: cover;
     background-position: center;
     position: relative;
