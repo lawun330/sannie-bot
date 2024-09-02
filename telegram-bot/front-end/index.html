@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBC Burmese News</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-cover flex items-center justify-center h-screen">
+    <div class="container">
+        <h1 class="title">BBC Burmese News</h1>
+        <div class="input-group">
+            <label for="url-input" class="label">Enter URL:</label>
+            <input id="url-input" type="text" placeholder="https://example.com" class="input">
+        </div>
+        <label for="depth-select" class="label">OR</label>
+        <div class="input-group">
+            <label for="depth-select" class="label">Select Category:</label>
+            <select id="depth-select" class="select">
+                <option value="main">ပင်မစာမျက်နှာ</option>
+                <option value="myanmar">မြန်မာ့ရေးရာ</option>
+                <option value="international">နိုင်ငံတကာ</option>
+                <option value="articles">ဆောင်းပါး</option>
+                <option value="interviews">အင်တာဗျူး</option>
+                <option value="business">ကုန်သွယ်စီးပွား</option>
+                <option value="videos">ဗီဒီယိုများ</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label class="label">Select Depth:</label>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" name="depth" value="no-url" checked class="radio">
+                    <span class="radio-text">No URL</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="depth" value="layer-1" class="radio">
+                    <span class="radio-text">Layer 1</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="depth" value="layer-2" class="radio">
+                    <span class="radio-text">Layer 2</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="depth" value="layer-3" class="radio">
+                    <span class="radio-text">Layer 3</span>
+                </label>
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="delay-input" class="label">Delay (ms):</label>
+            <input id="delay-input" type="number" value="1000" placeholder="1000" class="input">
+        </div>
+        <div class="input-group">
+            <button id="get-urls-button" class="button">Get URLs</button>
+        </div>
+        <div class="input-group relative">
+            <textarea id="result-box" rows="4" class="textarea" placeholder="Fetched URLs will appear here..."></textarea>
+            <button id="copy-urls-button" class="copy-button">Copy</button>
+        </div>
+        <div class="input-group">
+            <button id="view-button" class="button">View Contents</button>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+body {
+    background-color: #ffffff;
+    color: #000000;
+    background-image: url('../../img/bbc_news_background_by_danielcummings.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    z-index: -1; /* Ensure it is behind the content */
+    pointer-events: none; /* Allow interaction with underlying elements */
+}
+
+.container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 28rem;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideIn 1s forwards;
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #ef4444;
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.label {
+    display: block;
+    color: #4a5568;
+}
+
+.input, .select, .textarea {
+    margin-top: 0.25rem;
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d2d6dc;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 0.125rem rgba(239, 68, 68, 0.25);
+}
+
+.radio-group {
+    margin-top: 0.25rem;
+}
+
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1.5rem;
+}
+
+.radio {
+    color: #ef4444;
+}
+
+.border-gray-300 {
+    border-color: #d1d5db; /* Light Gray */
+}
+
+.button {
+    width: 100%;
+    background-color: #ef4444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.button:hover {
+    background-color: #dc2626;
+    transform: scale(1.05);
+}
+
+.copy-button {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+    background-color: #ef4444;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+}
+
+.unclickable {
+    background-color: #d1d5db; /* Gray color */
+    cursor: not-allowed;
+}
