@@ -14,7 +14,6 @@ Once, the bot is started, it will automatically greet you with a direct link to 
 
 You can also use other methods to open the app. The bot supports
 - inline button
-- bot menu button
 - keyboard button
 - inline mode
 
