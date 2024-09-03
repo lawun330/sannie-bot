@@ -10,17 +10,20 @@ OR
 ```console
 @presenter_sannie_bot
 ```
-Once, the bot is started, it will automatically greet you with a direct link to open the web app. 
+Once, the bot is started, it will automatically greet you with a direct link to the website.
 
-You can also use other methods to open the app. The bot supports
+I recommend using other methods to open the app without exiting the Telegram as this is the whole purpose. The bot supports
 - inline button
 - keyboard button
 - inline mode
 
+Once the app is launched, you can enter a single link to read news content. If you do not have a particular link, choose a topic to get more links, copy a link, and then insert it.
+
 ## Current Features
 At the moment, there are two commands for my bot.
-1. [/start]() - return the main web app
-2. [/help]() - provide descriptions to use the bot
+1. [/start]() - greet and return the main web app
+2. [/help]() - describe how to use this bot
+3. [/keyboard]() - return the keyboard button
 
 ## Scraper's Potential
 The webscraper can
