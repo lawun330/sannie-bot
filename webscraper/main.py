@@ -244,5 +244,6 @@ def scrapeAllTopics(main_url):
     print("Hopefully, everything is scraped!")
 
 
-# # Main
-scrapeAllTopics(main_url)
+# ## Main
+if __name__ == "__main__":
+    scrapeAllTopics(main_url)
