@@ -58,7 +58,44 @@ This crawler is combined with the other two parts: the front-end and the Telegra
 ## Project Requirements
 To run DynamoDB locally, [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) is recommended.
 
-You may also have to install additional libraries and modules with
+You may also have to install additional libraries and modules. 
+### A. Simple but Slow Installation
+1. Create a virtual environment with Python
+```console
+python -m venv <env-name>
+```
+OR with conda.
+```console
+conda create --name <env-name>
+```
+2. Activate the virtual environment.
+- For the virtual environment created with Python
+```console
+<env-name>\Scripts\activate
+```
+- For the virtual environment created with conda
+```console
+conda activate "C:\Users\<your-pc-username>\anaconda3\envs\<env-name>"
+```
+3. Install dependencies with
 ```console
 pip install -r requirements.txt
+```
+### B. Fast but Complicated Installation
+1. Install [uv](https://github.com/astral-sh/uv): an extremely fast Python package and project manager, written in Rust.
+```console
+pip install uv
+```
+2. Go to your working directory.
+3. Create a virtual environment in your working directory with uv.
+```console
+uv venv
+```
+4. Activate the virtual environment.
+```console
+.venv\Scripts\activate
+```
+5. Install dependencies with
+```console
+uv pip install -r requirements
 ```
