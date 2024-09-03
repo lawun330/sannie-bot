@@ -1,0 +1,12 @@
+python-dotenv
+python-telegram-bot
+numpy
+pandas
+beautifulsoup4
+boto3
+jupyter
+notebook
+fastapi
+redis
+uvicorn
+html5lib
