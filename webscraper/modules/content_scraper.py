@@ -1,13 +1,19 @@
 '''This script is used to get the content from a particular content link.'''
 
+import sys
+import os
+
+# add the parent directory to sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# import modules from parent directory 
 from main import webScraper, contentScraper
-from content_links_scraper import list_of_content_links
+
 
 # test
 # execute only if the file is run as the main program
 if __name__ == "__main__":
     # get a content link
-    content_url = list_of_content_links[0]
+    content_url = 'https://www.bbc.com/burmese/articles/clldd5j76pno' # example
 
     # get the content from the content link
     content_soup = webScraper(content_url)

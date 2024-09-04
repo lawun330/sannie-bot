@@ -1,13 +1,19 @@
 '''This script is used to get the list of content links from a particular page link.'''
 
+import sys
+import os
+
+# add the parent directory to sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# import modules from parent directory 
 from main import webScraper, soupParser
-from pages_scraper import list_of_page_urls
+
 
 # test
 # execute only if the file is run as the main program
 if __name__ == "__main__":
     # get a page
-    chosen_page_url = list_of_page_urls[1]
+    chosen_page_url = 'https://www.bbc.com/burmese/topics/c404v08p1wxt?page=35' # example
 
     # to store all content links of the page
     list_of_content_links = []
@@ -27,7 +33,7 @@ if __name__ == "__main__":
 
 
 # function implementation
-def fetch_content_links(page_url):
+def fetch_content_links(chosen_page_url):
     list_of_content_links = []
     soup = webScraper(chosen_page_url) 
     news_headers_soup, datetime_soup = soupParser(soup)

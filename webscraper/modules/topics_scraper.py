@@ -1,5 +1,11 @@
 '''This script is used to get the list of topics urls from the main url of the website.'''
 
+import sys
+import os
+
+# add the parent directory to sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# import modules from parent directory 
 from main import webScraper, getTopicsUrls
 
 # get the main url of the website
