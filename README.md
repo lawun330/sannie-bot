@@ -58,7 +58,19 @@ Check all notebooks in the _notebooks_ folder for detailed documentations. You w
 This crawler is combined with the other two parts: the front-end and the Telegram bot. Necessary scripts can be found in specified folders as above.
 
 ## Project Requirements
+To install DynamoDB locally, check [here](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html).
+
+- (Optional Config) If you download the compressed file, extract it and move to "C:".
+
 To run DynamoDB locally, [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) is recommended.
+
+- (Optional Config) Place it in the specific directory such that **java.exe** can be used as follows: 
+```console
+"C:\Program Files\Java\jdk-17\bin\java.exe"
+```
+
+To install Redis for client, check [here](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/).
+To install Ubuntu on Windows with WSL, check [here](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 You may also have to install additional libraries and modules. 
 ### A. Simple but Slow Installation
@@ -100,4 +112,21 @@ uv venv
 5. Install dependencies with
 ```console
 uv pip install -r requirements
+```
+## Hosting Servers
+- **Telegram**: You have to navigate to the directory `/telegram-bot` and host the Telegram bot with
+```console
+python app.py
+```
+- **Redis**: You need Redis-client installed on your device. To host it, open Ubuntu Terminal and run
+```console
+redis-cli
+```
+- **DynamoDB**: You need to host DynamoDB to store data. Navigate to the directory `/db` and run
+```console
+DynamoDB_init.bat
+```
+- **FastAPI**: You host it to work with the website. Run
+```console
+uvicorn api:app --reload
 ```
