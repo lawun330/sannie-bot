@@ -118,15 +118,15 @@ uv pip install -r requirements
 ```console
 python app.py
 ```
-- **Redis**: You need Redis-client installed on your device. To host it, open Ubuntu Terminal and run
+- **Redis**: You need the Redis-client installed on your device. It caches the current link to continue fetching if the connection is lost. Open the Ubuntu Terminal and run
 ```console
 redis-cli
 ```
-- **DynamoDB**: You need to host DynamoDB to store data. Navigate to the directory `/db` and run
+- **DynamoDB**: You need to host the DynamoDB to store data. Navigate to the directory `/db` and run
 ```console
 DynamoDB_init.bat
 ```
-- **FastAPI**: You host it to work with the website. Run
+- **FastAPI**: Run the following to work with the website requests
 ```console
 uvicorn api:app --reload
 ```
