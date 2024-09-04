@@ -64,7 +64,7 @@ body::before {
     color: #4a5568;
 }
 
-.input, .select, .textarea {
+.input, .select {
     margin-top: 0.25rem;
     display: block;
     width: 100%;
@@ -124,11 +124,6 @@ body::before {
     cursor: pointer;
 }
 
-.unclickable {
-    background-color: #d1d5db; /* Gray color */
-    cursor: not-allowed;
-}
-
 .links-container {
     max-height: 400px;
     overflow-y: auto;
@@ -173,4 +168,14 @@ body::before {
     background-color: white;
     font-size: 1rem;
     line-height: 1.5;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.mr-2 {
+    margin-right: 0.5rem;
 }
