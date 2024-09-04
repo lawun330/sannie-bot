@@ -4,10 +4,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const contentContainer = document.getElementById('content-container');
     const saveButton = document.getElementById('save-button');
     const backButton = document.getElementById('back-button');
+    const copyButton = document.getElementById('copy-button');
 
     // Fetch and display the content (implementation needed)
     fetchContent().then(content => {
         contentContainer.textContent = content;
+    });
+
+    // Add click event listener to the copy button
+    copyButton.addEventListener('click', () => {
+        const content = contentContainer.textContent;
+        navigator.clipboard.writeText(content).then(() => {
+            alert('Content copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy content: ', err);
+        });
     });
 
     // Add click event listener to the save button

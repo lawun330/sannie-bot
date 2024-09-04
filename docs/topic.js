@@ -83,7 +83,7 @@ function displayIndividualLinks(urls, pageNumber) {
     pagesContainer.style.display = 'none';
     linksContainer.style.display = 'block';
     backToPagesButton.style.display = 'block';
-    document.getElementById('title-content').textContent = `Links for Page ${pageNumber} of `;
+    document.getElementById('title-content').textContent = `News for Page ${pageNumber}\n`;
 
     urls.forEach((url, index) => {
         // Create elements for each link
@@ -128,18 +128,26 @@ function updateButtonText(button, text) {
     }, 2000);
 }
 
-// Function to fetch topic pages (dummy implementation)
+// Function to fetch pages of a topic (dummy implementation)
 async function fetchTopicPages(topicUrl) {
-    // Implement the logic to fetch pages for the selected topic URL
-    // This could involve making an API call to your backend or using pre-fetched data
-    // For now, we'll return a dummy array
-    return ['https://example.com/page1', 'https://example.com/page2', 'https://example.com/page3'];
+    try {
+        const response = await fetch(`http://localhost:8000/api/topic-pages?url=${encodeURIComponent(topicUrl)}`);
+        const data = await response.json();
+        return data.pages;
+    } catch (error) {
+        console.error('Error fetching topic pages:', error);
+        return [];
+    }
 }
 
-// Function to fetch page links (dummy implementation)
+// Function to fetch links of a page of a topic (dummy implementation)
 async function fetchPageLinks(pageUrl) {
-    // Implement the logic to fetch links for the selected page URL
-    // This could involve making an API call to your backend or using pre-fetched data
-    // For now, we'll return a dummy array
-    return ['https://example.com/link1', 'https://example.com/link2', 'https://example.com/link3'];
+    try {
+        const response = await fetch(`http://localhost:8000/api/page-links?url=${encodeURIComponent(pageUrl)}`);
+        const data = await response.json();
+        return data.links;
+    } catch (error) {
+        console.error('Error fetching page links:', error);
+        return [];
+    }
 }
