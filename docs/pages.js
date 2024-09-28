@@ -1,33 +1,15 @@
 // Wait for the DOM to be fully loaded before executing the script
 document.addEventListener('DOMContentLoaded', () => {
-    // Get URL parameters and DOM elements
-    const urlParams = new URLSearchParams(window.location.search);
-    const topicUrl = urlParams.get('url');
+    // Remove initial animation classes from the container
+    const container = document.querySelector('.container');
+    container.classList.remove('slide-left', 'slide-right', 'instant');
+    
+    // Get references to important DOM elements
     const backButton = document.getElementById('back-button');
     const pagesContainer = document.getElementById('pages-container');
     const linksContainer = document.getElementById('links-container');
 
-    // Object containing Burmese titles and their corresponding URLs
-    const topicTitles = {
-        'https://www.bbc.com/burmese': 'ပင်မစာမျက်နှာ',
-        'https://www.bbc.com/burmese/topics/c404v027pd4t': 'မြန်မာ့ရေးရာ',
-        'https://www.bbc.com/burmese/topics/c9wpm0en9jdt': 'နိုင်ငံတကာ',
-        'https://www.bbc.com/burmese/topics/cg726y2k82dt': 'ဆောင်းပါး',
-        'https://www.bbc.com/burmese/topics/c404v44epsdt': 'အင်တာဗျူး',
-        'https://www.bbc.com/burmese/topics/cyz8kl2e1rqt': 'ကုန်သွယ်စီးပွား',
-        'https://www.bbc.com/burmese/topics/c404v44epsdt': 'ဗီဒီယိုများ'
-    };
-
-    // Get the Burmese title for the current topic URL
-    const topicTitle = topicTitles[topicUrl] || 'Unknown Topic';
-    document.getElementById('topic-title').textContent = topicTitle;
-
-    // Fetch and display pages for the selected topic
-    fetchTopicPages(topicUrl).then(pages => {
-        displayPages(pages);
-    });
-
-    // Add click event listener to the back button
+    // Add click event listener to the back button to return to index page
     backButton.addEventListener('click', () => {
         window.location.href = 'index.html';
     });
@@ -35,15 +17,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add click event listener to the "Back to Pages" button
     const backToPagesButton = document.getElementById('back-to-pages');
     backToPagesButton.addEventListener('click', () => {
-        document.getElementById('pages-container').style.display = 'block';
-        document.getElementById('links-container').style.display = 'none';
+        // Show pages container, hide links container
+        pagesContainer.style.display = 'block';
+        linksContainer.style.display = 'none';
         backToPagesButton.style.display = 'none';
+        // Update the title
         document.getElementById('title-content').textContent = 'Pages for ';
     });
+
+    // Initialize the page when the DOM is loaded
+    initializePage();
 });
 
 // Function to display pages
 function displayPages(pages) {
+    console.log('Received pages:', pages);
     const pagesContainer = document.getElementById('pages-container');
     pagesContainer.innerHTML = ''; // Clear previous content
 
@@ -53,16 +41,38 @@ function displayPages(pages) {
         pageDiv.className = 'link-item';
         
         const pageText = document.createElement('span');
-        pageText.textContent = `Page ${index + 1}`;
+        pageText.textContent = page.title || `Page ${index + 1}`;
         
         const viewButton = document.createElement('button');
         viewButton.textContent = 'View Links';
         viewButton.className = 'copy-button';
-        viewButton.addEventListener('click', () => {
-            // Fetch and display links for the selected page
-            fetchPageLinks(page).then(links => {
-                displayIndividualLinks(links, index + 1);
-            });
+        viewButton.addEventListener('click', async () => {
+            try {
+                console.log('Page object:', page);
+                let pageUrl = page;
+
+                // Handle different page URL formats
+                if (typeof pageUrl === 'function') {
+                    pageUrl = pageUrl();
+                }
+
+                if (typeof pageUrl === 'string' && !pageUrl.startsWith('http')) {
+                    pageUrl = `https://www.bbc.com${pageUrl.startsWith('/') ? '' : '/'}${pageUrl}`;
+                }
+
+                console.log('Page URL:', pageUrl);
+
+                // Only redirect after the API call is complete
+                await sendDataToFastAPI('/set_chosen_page', { page: pageUrl });
+
+                console.log('Redirecting to loading.html in 0 seconds...');
+                setTimeout(() => {
+                    window.location.href = 'loading.html?source=pages';
+                }, 0);
+            } catch (error) {
+                console.error('Error setting chosen page:', error);
+                showError(`Failed to set chosen page: ${error.message}`);
+            }
         });
         
         // Append elements to the page container
@@ -72,8 +82,8 @@ function displayPages(pages) {
     });
 }
 
-// Function to display individual links
-function displayIndividualLinks(urls, pageNumber) {
+// Function to display individual page links
+function displayIndividualLinks(urls) {
     const linksContainer = document.getElementById('links-container');
     const pagesContainer = document.getElementById('pages-container');
     const backToPagesButton = document.getElementById('back-to-pages');
@@ -83,7 +93,7 @@ function displayIndividualLinks(urls, pageNumber) {
     pagesContainer.style.display = 'none';
     linksContainer.style.display = 'block';
     backToPagesButton.style.display = 'block';
-    document.getElementById('title-content').textContent = `News for Page ${pageNumber}\n`;
+    document.getElementById('title-content').textContent = 'Links for ';
 
     urls.forEach((url, index) => {
         // Create elements for each link
@@ -128,26 +138,49 @@ function updateButtonText(button, text) {
     }, 2000);
 }
 
-// Function to fetch pages of a topic (dummy implementation)
-async function fetchTopicPages(topicUrl) {
-    try {
-        const response = await fetch(`http://localhost:8000/api/topic-pages?url=${encodeURIComponent(topicUrl)}`);
-        const data = await response.json();
-        return data.pages;
-    } catch (error) {
-        console.error('Error fetching topic pages:', error);
-        return [];
-    }
+// Function to fetch pages, contents, or article
+function fetchItem(item) {
+    fetch(`http://127.0.0.1:8000/${item}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Change this to parse JSON
+        })
+        .then(data => {
+            if (item === 'pages') {
+                displayPages(data); // Call displayPages with the fetched data
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            showError(`Failed to fetch ${item}: ${error.message}`);
+        });
 }
 
-// Function to fetch links of a page of a topic (dummy implementation)
-async function fetchPageLinks(pageUrl) {
+// Function to initialize the page
+function initializePage() {
+    fetchItem('pages');
+}
+
+// Function to send data to FastAPI
+async function sendDataToFastAPI(endpoint, data) {
     try {
-        const response = await fetch(`http://localhost:8000/api/page-links?url=${encodeURIComponent(pageUrl)}`);
-        const data = await response.json();
-        return data.links;
+        const response = await fetch(`http://localhost:8000${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
     } catch (error) {
-        console.error('Error fetching page links:', error);
-        return [];
+        console.error('Error:', error);
+        throw error;
     }
 }

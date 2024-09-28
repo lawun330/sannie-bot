@@ -10,12 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add change event listener to radio buttons
     document.querySelectorAll('input[name="option"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
+            // Toggle visibility of elements based on selected option
             if (e.target.value === 'insert-link') {
+                // Show single URL input and view button, hide topic selection
                 if (singleUrlInput) singleUrlInput.style.display = 'block';
                 if (topicSelect) topicSelect.style.display = 'none';
                 if (getLinksContainer) getLinksContainer.style.display = 'none';
                 if (viewButton) viewButton.style.display = 'block';
             } else if (e.target.value === 'topic') {
+                // Show topic selection and get links button, hide single URL input
                 if (singleUrlInput) singleUrlInput.style.display = 'none';
                 if (topicSelect) topicSelect.style.display = 'block';
                 if (getLinksContainer) getLinksContainer.style.display = 'block';
