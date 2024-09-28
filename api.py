@@ -51,25 +51,48 @@ error_found = False
 # cache them in Redis
 @app.post("/set_chosen_topic")
 async def set_topic(request: Request):
-    data = await request.json()
-    topic_link = data.get('topic')
-    redis_client.set(redis_javascript_cache_keys[0], topic_link)
-    return {"message": "Topic set successfully"}
+    try:
+        data = await request.json()
+        topic_link = data.get('topic')
+        if not topic_link:
+            return {"error": "No topic link provided"}
+        
+        redis_client.setex(redis_javascript_cache_keys[0], CACHE_EXPIRATION, topic_link)
+        return {"message": "Topic set successfully"}
+    except redis.RedisError as e:
+        return {"error": f"Redis error: {str(e)}"}
+    except Exception as e:
+        return {"error": f"Unexpected error: {str(e)}"}
 
 @app.post("/set_chosen_page")
 async def set_page(request: Request):
-    data = await request.json()
-    page_link = data.get('page')
-    redis_client.set(redis_javascript_cache_keys[1], page_link)
-    return {"message": "Page set successfully"}
+    try:
+        data = await request.json()
+        page_link = data.get('page')
+        if not page_link:
+            return {"error": "No page link provided"}
+        
+        redis_client.setex(redis_javascript_cache_keys[1], CACHE_EXPIRATION, page_link)
+        return {"message": "Page set successfully"}
+    except redis.RedisError as e:
+        return {"error": f"Redis error: {str(e)}"}
+    except Exception as e:
+        return {"error": f"Unexpected error: {str(e)}"}
 
 @app.post("/set_chosen_content")
 async def set_content(request: Request):
-    data = await request.json()
-    content_link = data.get('content')
-    redis_client.set(redis_javascript_cache_keys[2], content_link)
-    return {"message": "Content set successfully"}
-
+    try:
+        data = await request.json()
+        content_link = data.get('content')
+        if not content_link:
+            return {"error": "No content link provided"}
+        
+        redis_client.setex(redis_javascript_cache_keys[2], CACHE_EXPIRATION, content_link)
+        return {"message": "Content set successfully"}
+    except redis.RedisError as e:
+        return {"error": f"Redis error: {str(e)}"}
+    except Exception as e:
+        return {"error": f"Unexpected error: {str(e)}"}
 
 # DEBUGGING
 # read the chosen topic, page, and content from cache with fastAPI

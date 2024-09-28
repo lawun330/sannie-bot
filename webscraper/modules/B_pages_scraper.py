@@ -42,7 +42,7 @@ def fetch_pages(topic_url):
     list_of_page_urls.append(topic_url)
     soup = webScraper(topic_url)
     total_pages = getPageLimit(soup)
-    for _i in range(3): # total_pages
+    for _i in range(5): # total_pages
         try:
             url = getNextPageUrl(topic_url, soup)
             soup = webScraper(url)
