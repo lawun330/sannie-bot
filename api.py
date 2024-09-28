@@ -16,6 +16,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import redis
 import time
+import json
 
 # import custom functions from webscraping modules
 from webscraper.modules import fetch_pages  # B_pages_scraper
@@ -96,22 +97,18 @@ def read_content():
     # retrieve the page links from cache
 @app.get("/pages")
 def read_pages():
+    topic_link = redis_client.get(redis_javascript_cache_keys[0]) # get topic link from cache
+    try:    # try scraping the page links
+        data = fetch_pages(topic_link)
+    except:   # if connection error, retry until the connection comes back
+        error_found = True
+        while(error_found):
+            print("  - Connection Error. Retrying in 5 seconds...")
+            time.sleep(5) # wait 5 seconds
+            data = fetch_pages(topic_link) # try scraping again
+    redis_client.set(redis_scraped_cache_keys[0], json.dumps(data))  # Serialize the data to a JSON string
     cache = redis_client.get(redis_scraped_cache_keys[0]) # get pages from cache
-    if cache: # if cache is not empty
-        return cache
-    else: # if cache is empty
-        topic_link = redis_client.get(redis_javascript_cache_keys[0]) # get topic link from cache
-        try:    # try scraping the page links
-            data = fetch_pages(topic_link)
-        except:   # if connection error, retry until the connection comes back
-            error_found = True
-            while(error_found):
-                print("  - Connection Error. Retrying in 5 seconds...")
-                time.sleep(5) # wait 5 seconds
-                data = fetch_pages(topic_link) # try scraping again
-        redis_client.set(redis_scraped_cache_keys[0], data) # set pages in cache
-        cache = redis_client.get(redis_scraped_cache_keys[0]) # get pages from cache
-        return cache
+    return json.loads(cache)  # Deserialize the JSON string back to a Python object
 
 # WORKING WITH CHOSEN PAGE
 # /contents contains the content links of the chosen page
@@ -119,22 +116,18 @@ def read_pages():
     # retrieve the content links from cache
 @app.get("/contents")
 def read_content_links():
+    page_link = redis_client.get(redis_javascript_cache_keys[1]) # get page link from cache
+    try:    # try scraping the content links
+        data = fetch_content_links(page_link)
+    except:   # if connection error, retry until the connection comes back
+        error_found = True
+        while(error_found):
+            print("  - Connection Error. Retrying in 5 seconds...")
+            time.sleep(5) # wait 5 seconds
+            data = fetch_content_links(page_link) # try scraping again
+    redis_client.set(redis_scraped_cache_keys[1], data) # set content links in cache
     cache = redis_client.get(redis_scraped_cache_keys[1]) # get content links from cache
-    if cache: # if cache is not empty
-        return cache
-    else: # if cache is empty
-        page_link = redis_client.get(redis_javascript_cache_keys[1]) # get page link from cache
-        try:    # try scraping the content links
-            data = fetch_content_links(page_link)
-        except:   # if connection error, retry until the connection comes back
-            error_found = True
-            while(error_found):
-                print("  - Connection Error. Retrying in 5 seconds...")
-                time.sleep(5) # wait 5 seconds
-                data = fetch_content_links(page_link) # try scraping again
-        redis_client.set(redis_scraped_cache_keys[1], data) # set content links in cache
-        cache = redis_client.get(redis_scraped_cache_keys[1]) # get content links from cache
-        return cache
+    return cache
 
 
 # WORKING WITH CHOSEN CONTENT
@@ -143,22 +136,18 @@ def read_content_links():
     # retrieve the content from cache
 @app.get("/article")
 def read_content():
+    content_link = redis_client.get(redis_javascript_cache_keys[2]) # get content link from cache
+    try:    # try scraping the content
+        data = get_content(content_link)
+    except:   # if connection error, retry until the connection comes back
+        error_found = True
+        while(error_found):
+            print("  - Connection Error. Retrying in 5 seconds...")
+            time.sleep(5) # wait 5 seconds
+            data = get_content(content_link) # try scraping again
+    redis_client.set(redis_scraped_cache_keys[2], data) # set content in cache
     cache = redis_client.get(redis_scraped_cache_keys[2]) # get content from cache
-    if cache: # if cache is not empty
-        return cache
-    else: # if cache is empty
-        content_link = redis_client.get(redis_javascript_cache_keys[2]) # get content link from cache
-        try:    # try scraping the content
-            data = get_content(content_link)
-        except:   # if connection error, retry until the connection comes back
-            error_found = True
-            while(error_found):
-                print("  - Connection Error. Retrying in 5 seconds...")
-                time.sleep(5) # wait 5 seconds
-                data = get_content(content_link) # try scraping again
-        redis_client.set(redis_scraped_cache_keys[2], data) # set content in cache
-        cache = redis_client.get(redis_scraped_cache_keys[2]) # get content from cache
-        return cache
+    return cache
 
 
 # run the app
