@@ -39,7 +39,7 @@ redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=T
 
 # create Redis cache keys
 redis_javascript_cache_keys = ["chosen_topic", "chosen_page", "chosen_content"]
-redis_scraped_cache_keys = ["pages", "content_links", "content"]
+redis_scraped_cache_keys = ["pages", "contents", "article"]
 
 # variables
 CACHE_EXPIRATION = 3600  # Set expiration time for cache entries (1 hour)
@@ -91,7 +91,7 @@ def read_content():
 # GETTING CHOSEN TOPIC, PAGE, AND CONTENT
 
 # WORKING WITH CHOSEN TOPIC
-# pages contains the page links of the chosen topic
+# /pages contains the page links of the chosen topic
     # cache the page links in Redis
     # retrieve the page links from cache
 @app.get("/pages")
@@ -114,10 +114,10 @@ def read_pages():
         return cache
 
 # WORKING WITH CHOSEN PAGE
-# content_links contains the content links of the chosen page
+# /contents contains the content links of the chosen page
     # cache the content links in Redis
     # retrieve the content links from cache
-@app.get("/content_links")
+@app.get("/contents")
 def read_content_links():
     cache = redis_client.get(redis_scraped_cache_keys[1]) # get content links from cache
     if cache: # if cache is not empty
@@ -138,10 +138,10 @@ def read_content_links():
 
 
 # WORKING WITH CHOSEN CONTENT
-# content contains the content of the chosen content link
+# /article contains the content of the chosen content link
     # cache the content in Redis
     # retrieve the content from cache
-@app.get("/content")
+@app.get("/article")
 def read_content():
     cache = redis_client.get(redis_scraped_cache_keys[2]) # get content from cache
     if cache: # if cache is not empty
