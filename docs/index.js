@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add click event listener to the "Get Links" button
     if (getLinksButton) {
-        getLinksButton.addEventListener('click', () => {
+        getLinksButton.addEventListener('click', async () => {
             console.log('Get Links button clicked');
             
             // Check if topicDropdown exists
@@ -59,9 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const topicUrl = selectedOption.dataset.url;
             console.log('Topic URL:', topicUrl);
             
-            // Redirect to loading.html with the selected URL
-            console.log('Redirecting to:', `loading.html?url=${encodeURIComponent(topicUrl)}`);
-            window.location.href = `loading.html?url=${encodeURIComponent(topicUrl)}`;
+            // Send the selected URL to FastAPI
+            await sendDataToFastAPI('/set_chosen_topic', { topic: topicUrl });
+            
+            // Add a delay before redirecting
+            console.log('Redirecting to loading.html in 0 seconds...');
+            setTimeout(() => {
+                window.location.href = 'loading.html';
+            }, 0); // 60000 milliseconds = 60 seconds
         });
     }
 
@@ -98,4 +103,26 @@ function navigateTo(url, direction) {
         container.classList.add('instant');
         window.location.href = url;
     }, 300);
+}
+
+// Function to send data to FastAPI
+async function sendDataToFastAPI(endpoint, data) {
+    try {
+        const response = await fetch(`http://localhost:8000${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('Success:', result);
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
