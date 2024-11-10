@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading - BBC Burmese News</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-cover flex items-center justify-center h-screen">
+    <div class="container">
+        <h1 class="title mb-8">BBC Burmese News</h1>
+        <div class="input-group">
+            <p class="text-sm mb-4">Please wait while we fetch the latest news.</p>
+            <div class="flex justify-center mb-4">
+                <div class="spinner animate-spin"></div>
+            </div>
+            <p id="status" class="text-xl mb-4 text-center">Loading...</p>
+            <div id="error-message" class="text-center text-red-500 hidden mb-4">
+                <p>Error: Failed to fetch content. Please check your internet connection and try again.</p>
+            </div>
+        </div>
+        <div class="input-group w-full">
+            <button id="back-button" class="button w-full">Back to Main Page</button>
+        </div>
+    </div>
+    <script src="functions.js"></script>
+    <script src="loading.js"></script>
+</body>
+</html>

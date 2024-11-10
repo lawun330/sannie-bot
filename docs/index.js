@@ -1,131 +1,154 @@
-// Wait for the DOM to be fully loaded before executing the script
-document.addEventListener('DOMContentLoaded', () => {
-    // Get references to various DOM elements
-    const singleUrlInput = document.getElementById('single-url-input');
-    const topicSelect = document.getElementById('topic-select');
-    const getLinksContainer = document.getElementById('get-links-container');
-    const getLinksButton = document.getElementById('get-links-button');
-    const viewButton = document.getElementById('view-button');
+/**
+ * This file contains the main event listener for the index page.
+ * It handles the radio button selection, topic selection, and URL input.
+ * It also includes helper functions for toggling UI elements and handling errors.
+ * 
+ * Connected files:
+ * - index.html: Contains the DOM elements this script interacts with
+ * - functions.js: Provides utility functions like showError() and sendDataToFastAPI()
+ * - loading.html: Destination page after form submission
+ * - api.py: FastAPI backend that receives the form data
+ */
 
-    // Add change event listener to radio buttons
+// Global variable declarations
+let singleUrlInput;
+let singleUrlContainer;
+let topicSelect;
+let getLinksContainer;
+let getLinksButton;
+let readLinkButton;
+
+// Main event listener for DOM load
+document.addEventListener('DOMContentLoaded', () => {
+    console.group('Topics'); // Start console group
+    
+    // Get references to important DOM elements
+    singleUrlContainer = document.getElementById('single-url-container');
+    singleUrlInput = document.getElementById('single-url-input');
+    topicSelect = document.getElementById('topic-select');
+    getLinksContainer = document.getElementById('get-links-container');
+    getLinksButton = document.getElementById('get-links-button');
+    readLinkButton = document.getElementById('read-link-button');
+
+    // Log available topics
+    const topicDropdown = document.getElementById('topic-dropdown');
+    if (topicDropdown) {
+        const topics = Array.from(topicDropdown.options).map(option => ({
+            name: option.value,
+            url: option.getAttribute('data-url')
+        }));
+        console.log('Topics to choose from:', topics);
+    }
+
+    // Radio button event handlers for UI toggling
     document.querySelectorAll('input[name="option"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
-            // Toggle visibility of elements based on selected option
-            if (e.target.value === 'insert-link') {
-                // Show single URL input and view button, hide topic selection
-                if (singleUrlInput) singleUrlInput.style.display = 'block';
-                if (topicSelect) topicSelect.style.display = 'none';
-                if (getLinksContainer) getLinksContainer.style.display = 'none';
-                if (viewButton) viewButton.style.display = 'block';
-            } else if (e.target.value === 'topic') {
-                // Show topic selection and get links button, hide single URL input
-                if (singleUrlInput) singleUrlInput.style.display = 'none';
-                if (topicSelect) topicSelect.style.display = 'block';
-                if (getLinksContainer) getLinksContainer.style.display = 'block';
-                if (viewButton) viewButton.style.display = 'none';
-            }
+            handleRadioChange(e.target.value);
         });
     });
 
-    // Add click event listener to the "Get Links" button
+    // Event handler for getting links from selected topic
     if (getLinksButton) {
-        getLinksButton.addEventListener('click', async () => {
-            console.log('Get Links button clicked');
-            
-            // Check if topicDropdown exists
-            const topicDropdown = document.getElementById('topic-dropdown');
-            if (!topicDropdown) {
-                console.error('Topic dropdown element not found');
-                return;
-            }
-
-            console.log('topicDropdown:', topicDropdown);
-
-            const selectedIndex = topicDropdown.selectedIndex;
-            console.log('selectedIndex:', selectedIndex);
-            
-            // Check if a valid option is selected
-            if (selectedIndex === -1) {
-                console.error('No option selected');
-                return;
-            }
-
-            const selectedOption = topicDropdown.options[selectedIndex];
-            console.log('selectedOption:', selectedOption);
-
-            // Check if the selected option has a data-url attribute
-            if (!selectedOption || !selectedOption.dataset || !selectedOption.dataset.url) {
-                console.error('Selected option is invalid or does not have a data-url attribute');
-                return;
-            }
-
-            const topicUrl = selectedOption.dataset.url;
-            console.log('Topic URL:', topicUrl);
-            
-            // Send the selected URL to FastAPI
-            await sendDataToFastAPI('/set_chosen_topic', { topic: topicUrl });
-            
-            // Add a delay before redirecting
-            console.log('Redirecting to loading.html in 0 seconds...');
-            setTimeout(() => {
-                window.location.href = 'loading.html';
-            }, 0); // 60000 milliseconds = 60 seconds
-        });
+        getLinksButton.addEventListener('click', handleGetLinks);
     }
 
-    // Add click event listener to the "View Contents" button
-    if (viewButton) {
-        viewButton.addEventListener('click', () => {
-            // Get the manually entered URL
-            const urlInput = document.getElementById('url-input').value;
-            if (urlInput) {
-                // Redirect to the content page with the entered URL
-                navigateTo(`content.html?url=${encodeURIComponent(urlInput)}`, 'forward');
-            } else {
-                // Show an alert if no URL is entered
-                alert('Please enter a URL first.');
-            }
-        });
+    // Event handler for reading single URL content
+    if (readLinkButton) {
+        readLinkButton.addEventListener('click', handleReadLink);
     }
 
-    // Add this to handle the back button in topic.html and content.html
+    // Back button navigation handler
     if (document.getElementById('back-button')) {
-        document.getElementById('back-button').addEventListener('click', (e) => {
-            e.preventDefault();
-            navigateTo('index.html', 'backward');
-        });
+        document.getElementById('back-button').addEventListener('click', handleBackNavigation);
     }
+
+    console.groupEnd(); // End console group
 });
 
-// Function to navigate to a new page with a smooth transition
-function navigateTo(url, direction) {
-    const container = document.querySelector('.container');
-    container.classList.add(direction === 'forward' ? 'slide-left' : 'slide-right');
-    
-    setTimeout(() => {
-        container.classList.add('instant');
-        window.location.href = url;
-    }, 300);
+
+// Helper function to handle radio button changes
+function handleRadioChange(value) {
+    // Toggle UI elements based on the selected radio button
+    if (value === 'insert-link') {
+        toggleElements(true, singleUrlContainer, readLinkButton);
+        toggleElements(false, topicSelect, getLinksContainer);
+    } else if (value === 'topic') {
+        toggleElements(false, singleUrlContainer, readLinkButton);
+        toggleElements(true, topicSelect, getLinksContainer);
+    }
 }
 
-// Function to send data to FastAPI
-async function sendDataToFastAPI(endpoint, data) {
-    try {
-        const response = await fetch(`http://localhost:8000${endpoint}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        console.log('Success:', result);
-    } catch (error) {
-        console.error('Error:', error);
+
+// Helper function to toggle element visibility
+function toggleElements(show, ...elements) {
+    elements.forEach(element => {
+        if (element) element.style.display = show ? 'block' : 'none'; // block shows, none hides
+    });
+}
+
+
+// Handler for getting links from selected topic
+async function handleGetLinks() {    
+    // Check if a topic is selected
+    const topicSelect = document.getElementById('topic-dropdown');
+    if (!topicSelect || !topicSelect.value) {
+        showError('Please select a topic');
+        return;
     }
+
+    // Get the selected topic and its URL
+    const selectedTopic = topicSelect.value;
+    const selectedOption = topicSelect.options[topicSelect.selectedIndex];
+    const topicUrl = selectedOption.getAttribute('data-url');
+    console.log("The chosen topic is: ", topicUrl);
+
+    // Check if the URL is valid
+    if (!topicUrl) {
+        showError('Invalid topic URL');
+        return;
+    }
+    
+    try {
+        // Use sendDataToFastAPI instead of direct fetch
+        await sendDataToFastAPI('/set_chosen_topic', { topic: topicUrl });
+        
+        // Navigate to loading page with topic title
+        window.location.href = `loading.html?source=index&topicTitle=${encodeURIComponent(selectedTopic)}`;
+    } catch (error) {
+        showError(`Failed to set topic: ${error.message}`);
+    }
+}
+
+
+// Handler for reading content from a single URL
+async function handleReadLink() {
+    // Get the URL from the input field
+    const url = singleUrlInput.value;
+    if (!url) {
+        showError('Please enter a URL');
+        return;
+    }
+    
+    try {
+        // Use sendDataToFastAPI instead of direct fetch
+        await sendDataToFastAPI('/set_chosen_content', { content: url });
+        
+        // Navigate to loading page for article
+        window.location.href = `loading.html?source=contents`;
+    } catch (error) {
+        showError(`Failed to fetch content: ${error.message}`);
+    }
+}
+
+
+// Handler for back button navigation
+function handleBackNavigation() {
+    // Add slide-right animation class
+    const container = document.querySelector('.container');
+    container.classList.add('slide-right');
+    
+    // Navigate back to main page after animation
+    setTimeout(() => {
+        window.location.href = '/';
+    }, 300); // Match this with the CSS transition duration
 }

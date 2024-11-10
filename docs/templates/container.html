@@ -1,0 +1,43 @@
+<!-- This is the template for the main container of the BBC Burmese News application.
+ * The container.html template is loaded by the following files:
+ * 
+ * 1. pages.js - Handles displaying available pages for a selected topic
+ *    - Loads template via loadTemplate() on DOMContentLoaded
+ *    - Shows page links with "View Contents" buttons
+ * 
+ * 2. contents.js - Displays content links from a selected page
+ *    - Loads template via loadTemplate() on DOMContentLoaded 
+ *    - Shows content links with copy buttons
+ *
+ * Note: index.js and article.js do not actually load this template. 
+ * They use their own HTML structures defined in index.html and article.html respectively.
+ *
+ * The template provides consistent layout including:
+ * - Title area with dynamic content
+ * - Container for pages/contents
+ * - Navigation buttons (Back to Main Page, Back to Pages)
+ * 
+ * The template is loaded using the loadTemplate() function from functions.js
+ * which fetches container.html and injects its content into the current page.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body class="bg-cover flex items-center justify-center h-screen">
+    <div class="container">
+        <h1 class="title"><span id="title-content"></span><span id="topic-title"></span></h1>
+        <div id="pages-container" class="links-container"></div>
+        <div id="contents-container" class="links-container"></div>
+        <div class="input-group w-full">
+            <div class="button-row mb-4">
+                <button id="back-button" class="button w-full">Back to Main Page</button>
+            </div>
+            <div class="button-row">
+                <button id="back-to-pages" class="button" style="display: none;">Back to Page Selection</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

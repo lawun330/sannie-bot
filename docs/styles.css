@@ -1,3 +1,4 @@
+/* Base overlay for all pages */
 body::before {
     content: "";
     position: absolute;
@@ -5,22 +6,26 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
-    z-index: -1; /* Ensure it is behind the content */
-    pointer-events: none; /* Allow interaction with underlying elements */
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    pointer-events: none;
 }
 
+
+/* Main container used in all pages */
 .container {
     background-color: white;
     padding: 2rem;
     border-radius: 0.5rem;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 28rem;
+    max-width: 32rem;
     opacity: 1;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
+
+/* Animation classes for page transitions */
 .container.slide-left {
     transform: translateX(-100%);
     opacity: 0;
@@ -35,6 +40,8 @@ body::before {
     transition: none;
 }
 
+
+/* Title styling */
 .title {
     font-size: 1.5rem;
     font-weight: bold;
@@ -42,15 +49,25 @@ body::before {
     color: #ef4444;
 }
 
+
+/* Input group styling */
 .input-group {
     margin-bottom: 1rem;
 }
 
+.input-group.w-full {
+    width: 100%;
+}
+
+
+/* Label styling */
 .label {
     display: block;
     color: #4a5568;
 }
 
+
+/* Input and select styling */
 .input, .select {
     margin-top: 0.25rem;
     display: block;
@@ -63,11 +80,8 @@ body::before {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.input:focus, .select:focus, .textarea:focus {
-    border-color: #ef4444;
-    box-shadow: 0 0 0 0.125rem rgba(239, 68, 68, 0.25);
-}
 
+/* Radio button styling */
 .radio-group {
     margin-top: 0.25rem;
 }
@@ -78,16 +92,10 @@ body::before {
     margin-right: 1.5rem;
 }
 
-.radio {
-    color: #ef4444;
-}
 
-.border-gray-300 {
-    border-color: #d1d5db; /* Light Gray */
-}
-
+/* Button styling */
 .button {
-    width: 100%;
+    width: auto;
     background-color: #ef4444;
     color: white;
     padding: 0.5rem 1rem;
@@ -100,17 +108,82 @@ body::before {
     transform: scale(1.05);
 }
 
-.copy-button {
-    position: absolute;
-    right: 0.5rem;
-    top: 0.5rem;
-    background-color: #ef4444;
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-    cursor: pointer;
+
+/* Button row styling */
+.button-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
 }
 
+.button-row .button {
+    flex: 1;
+}
+
+
+/* For "Back to Main Page" button */
+.button.w-full {
+    width: 100%;
+}
+
+
+/* Link item styling */
+.link-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    gap: 1.5rem;
+}
+
+.link-item:last-child {
+    border-bottom: none;
+}
+
+.link-item span, .link-item a {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 1rem;
+    min-width: 0;
+}
+
+.link-item a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.link-item a:hover {
+    color: #1e40af;
+}
+
+
+/* Button styling within link items */
+.link-item .viewlinks-button, .link-item .copy-button {
+    width: auto;
+    background-color: #ef4444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.link-item .viewlinks-button:hover, .link-item .copy-button:hover {
+    background-color: #dc2626;
+    transform: scale(1.05);
+}
+
+.link-item .copy-button:disabled, #article-copy-button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* Container for links */
 .links-container {
     max-height: 400px;
     overflow-y: auto;
@@ -118,33 +191,11 @@ body::before {
     border: 1px solid #e5e7eb;
     border-radius: 0.375rem;
     padding: 0.5rem;
+    background-color: white;
 }
 
-.link-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem;
-    border-bottom: 1px solid #e5e7eb;
-}
 
-.link-item:last-child {
-    border-bottom: none;
-}
-
-.link-item span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-right: 1rem;
-}
-
-.link-item .copy-button {
-    flex-shrink: 0;
-    position: static;
-    padding: 0.25rem 0.5rem;
-}
-
+/* Content container styling */
 .content-container {
     max-height: 70vh;
     overflow-y: auto;
@@ -157,12 +208,25 @@ body::before {
     line-height: 1.5;
 }
 
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
+
+/* Dynamic title styling */
+#topic-title, #page-title {
+    color: #ef4444;
+    margin-left: 0;
 }
 
-.mr-2 {
-    margin-right: 0.5rem;
+
+/* Spinner animation for loading.html */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #000;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
 }
