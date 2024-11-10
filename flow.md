@@ -19,107 +19,61 @@ main url
 ├── last topic
 ```
 
-Therefore, I use nine endpoints and six Redis caching directories.
+The application uses nine endpoints and six Redis caching directories:
 
-- Endpoints <code>"/set_chosen_topic"</code>, <code>"/get_chosen_topic"</code> work with Redis cache <code>"chosen_topic"</code>
-- Endpoints <code>"/set_chosen_page"</code>, <code>"/get_chosen_page"</code> work with Redis cache <code>"chosen_page"</code>
-- Endpoints <code>"/set_chosen_content"</code>, <code>"/get_chosen_content"</code> work with Redis cache <code>"chosen_content"</code>
-- Endpoints <code>"/pages"</code> work with Redis cache <code>"pages"</code>
-- Endpoints <code>"/contents"</code> work with Redis cache <code>"contents"</code>
-- Endpoints <code>"/article"</code> work with Redis cache <code>"article"</code>
+- Endpoints `/set_chosen_topic`, `/get_chosen_topic` work with Redis cache "chosen_topic"
+- Endpoints `/set_chosen_page`, `/get_chosen_page` work with Redis cache "chosen_page"
+- Endpoints `/set_chosen_content`, `/get_chosen_content` work with Redis cache "chosen_content"
+- Endpoint `/pages` works with Redis cache "pages"
+- Endpoint `/contents` works with Redis cache "contents"
+- Endpoint `/article` works with Redis cache "article"
 
 
 Choosing Topic
 ==============
-User chooses a topic using a dropdown menu and clicks "Get Links" button in **index.html**.
-
-- **index.js** detects the change and sends a POST request to **api.py** with the chosen topic as the payload, in endpoint <code>"/set_chosen_topic"</code>
-- **api.py** receives the request and stores the chosen topic in Redis cache <code>"chosen_topic"</code>
-
-Developer can check the endpoint <code>"/get_chosen_topic"</code> in the browser to see the user's chosen topic.
-
-- **index.js** redirects to **loading.html**
-
-- **loading.js** fetches the page links from Redis cache <code>"pages"</code> with endpoint <code>"/pages"</code>.
-
-There is none in the cache.
-
-- **api.py** uses the chosen topic to scrape the page links from the BBC Burmese website
-- **api.py** stores the page links in Redis cache <code>"pages"</code>
-
-- **loading.js** fetches the page links from the cache in **api.py**, in endpoint <code>"/pages"</code> 
-- **loading.js** fetches data successfully
-- **loading.js** redirects to **pages.html**
-
-- **pages.html** fetches the page links from the cache in **api.py**, in endpoint <code>"/pages"</code>
-- **pages.html** displays the page links
+1. User chooses a topic using a dropdown menu and clicks "Get Links" button in **index.html**
+2. **index.js** detects the change and sends a POST request to **api.py** with the chosen topic as payload
+3. **api.py** stores the chosen topic in Redis cache "chosen_topic"
+4. **index.js** redirects to **loading.html**
+5. **loading.js** attempts to fetch page links from Redis cache "pages"
+6. If cache is empty, **api.py** scrapes page links from BBC Burmese website and stores them in cache
+7. **loading.js** fetches the cached page links and redirects to **pages.html**
+8. **pages.html** displays the page links with copy and view options
 
 
 Choosing Page
 =============
-User chooses a page link with a "Copy" button and a "Get Links" button in **pages.html**.
-
-- **pages.js** detects the change, sends a POST request to **api.py** with the chosen page as the payload, in endpoint <code>"/set_chosen_page"</code>
-- **api.py** receives the request and stores the chosen page in Redis cache <code>"chosen_page"</code>
-
-Developer can check the endpoint <code>"/get_chosen_page"</code> in the browser to see the user's chosen page.
-
-- **pages.js** redirects to **loading.html**
-
-- **loading.js** fetches the content links from Redis cache <code>"contents"</code> in endpoint <code>"/contents"</code>
-
-There is none in the cache.
-
-- **api.py** uses the chosen page to scrape the content links from the BBC Burmese website
-- **api.py** stores the content links in Redis cache <code>"contents"</code>
-
-- **loading.js** fetches the content links from the cache in **api.py**, in endpoint <code>"/contents"</code>
-- **loading.js** fetches successfully
-- **loading.js** redirects to **contents.html**
-
-- **contents.html** fetches the content links from the cache in **api.py**, in endpoint <code>"/contents"</code>
-- **contents.html** displays the content links
+1. User selects a page link in **pages.html** and clicks "View Content" button
+2. **pages.js** sends a POST request to **api.py** with the chosen page
+3. **api.py** stores the chosen page in Redis cache "chosen_page"
+4. **pages.js** redirects to **loading.html**
+5. **loading.js** attempts to fetch content links from Redis cache "contents"
+6. If cache is empty, **api.py** scrapes content links from BBC Burmese website and stores them in cache
+7. **loading.js** fetches the cached content links and redirects to **contents.html**
+8. **contents.html** displays the content links with copy options
 
 
 Choosing Content
 ================
-User chooses a content link with a "Copy" button and a "Back to Main Page" button in **contents.html**.
-- **contents.js** redirects to **index.html**
-
+1. User can return to the page selection interface by clicking "Back to Pages" button in **contents.html** if the page is chosen by mistake
+2. User can copy the URL of a content link in **contents.html** if the page is correct
+3. User returns to main page using "Back to Main Page" button
 
 Viewing Content
 ===============
-User clicks "View Content" button in **index.html**.
-
-- **index.js** detects the change, sends a GET request to **api.py** with the chosen article/content as the payload, in endpoint <code>"/set_chosen_content"</code>
-- **api.py** receives the request and stores the chosen article/content in Redis cache <code>"chosen_content"</code>
-
-Developer can check the endpoint <code>"/get_chosen_content"</code> in the browser to see the user's chosen article/content.
-
-- **index.js** redirects to **loading.html**
-
-- **loading.js** fetches the article/content from Redis cache <code>"article"</code> in endpoint <code>"/article"</code>
-
-There is none in the cache.
-
-- **api.py** uses the chosen article/content to scrape the article from the BBC Burmese website
-- **api.py** stores the article/content in Redis cache <code>"article"</code>
-
-- **loading.js** fetches the article/content from the cache in **api.py**, in endpoint <code>"/article"</code>
-- **loading.js** fetches successfully
-- **loading.js** redirects to **article.html**
-
-- **article.html** fetches the article/content from the cache in **api.py**, in endpoint <code>"/article"</code>
-- **article.html** displays the article/content
+1. User clicks "Read the Link" button in **index.html**
+2. **index.js** sends a GET request to **api.py** with the chosen content URL
+3. **api.py** stores the chosen content in Redis cache "chosen_content"
+4. **index.js** redirects to **loading.html**
+5. **loading.js** attempts to fetch article from Redis cache "article"
+6. If cache is empty, **api.py** scrapes article from BBC Burmese website and stores it in cache
+7. **loading.js** fetches the cached article and redirects to **article.html**
+8. **article.html** displays the article content
 
 
 Saving Content
 ==============
-user clicks "Save as Text File" button in **article.html**
-- output text file
-
-user clicks "Copy" button in **article.html**
-- copy to clipboard
-
-user clicks "Back to Main Page" button in **article.html**
-- redirect to **index.html**
+In **article.html**, user can:
+1. Click "Save as Text File" button to download content as .txt file
+2. Click "Copy" button to copy content to clipboard
+3. Click "Back to Main Page" button to return to **index.html**
