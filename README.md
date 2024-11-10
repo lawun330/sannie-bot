@@ -114,6 +114,10 @@ uv venv
 uv pip install -r requirements
 ```
 ## Hosting Servers
+- **Local HTTP Server**: Test your web application locally during development. The local HTTP server serves files from the current directory at port 9000 (arbitrary) with
+```console
+python -m http.server 9000
+```
 - **Telegram**: You have to navigate to the directory `/telegram-bot` and host the Telegram bot with
 ```console
 python app.py
