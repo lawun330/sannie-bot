@@ -120,9 +120,7 @@ body::before {
     flex: 1;
 }
 
-
-/* For "Back to Main Page" button */
-.button.w-full {
+.button.w-full { /* For "Back to Main Page" button */
     width: 100%;
 }
 
@@ -135,24 +133,17 @@ body::before {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid #e5e7eb;
     gap: 1.5rem;
+    position: relative;
 }
 
 .link-item:last-child {
     border-bottom: none;
 }
 
-.link-item span, .link-item a {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 1rem;
-    min-width: 0;
-}
-
 .link-item a {
     color: #2563eb;
     text-decoration: none;
+    display: inline-block;
 }
 
 .link-item a:hover {
@@ -160,8 +151,35 @@ body::before {
 }
 
 
+/* Scroll container styling */
+.scroll-container {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    min-width: 0;
+    padding-bottom: 5px;
+    margin-right: 100px;
+}
+
+.scroll-container::-webkit-scrollbar { /* Hide scrollbar for Chrome, Safari and Opera */
+    height: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb { /* Handle */
+    background: #cbd5e1;
+    border-radius: 2px;
+}
+    
+.scroll-container::-webkit-scrollbar-thumb:hover { /* Handle on hover */
+    background: #94a3b8;
+}
+
+
 /* Button styling within link items */
 .link-item .viewlinks-button, .link-item .copy-button {
+    position: absolute;
+    right: 1rem;
     width: auto;
     background-color: #ef4444;
     color: white;

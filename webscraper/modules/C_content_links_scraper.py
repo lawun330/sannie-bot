@@ -16,7 +16,7 @@ if __name__ == "__main__":
     chosen_page_url = 'https://www.bbc.com/burmese/topics/c404v08p1wxt?page=35' # example
 
     # to store all content links of the page
-    list_of_content_links = []
+    content_data = []
 
     # get the relevant part of the soup for the page
     soup = webScraper(chosen_page_url) 
@@ -26,21 +26,39 @@ if __name__ == "__main__":
     for i in range(len(news_headers_soup)):
         try:
             content_url = news_headers_soup[i].attrs['href']
-            list_of_content_links.append(content_url)
+            try:
+                header = news_headers_soup[i].string.strip()
+            except AttributeError:
+                header = list(news_headers_soup[i].span)[1].strip()      
+            content_data.append({
+                'url': content_url,
+                'header': header
+            })
         except AttributeError:
             break
-    print(list_of_content_links)
+    print(content_data)
 
 
 # function implementation
 def fetch_content_links(chosen_page_url):
-    list_of_content_links = []
+    content_data = []
     soup = webScraper(chosen_page_url) 
     news_headers_soup, datetime_soup = soupParser(soup)
     for i in range(len(news_headers_soup)):
         try:
             content_url = news_headers_soup[i].attrs['href']
-            list_of_content_links.append(content_url)
+
+            # Extract header text
+            try:
+                header = news_headers_soup[i].string.strip()
+            except AttributeError:
+                # Handle video-tagged headers
+                header = list(news_headers_soup[i].span)[1].strip()
+            
+            content_data.append({
+                'url': content_url,
+                'header': header
+            })
         except AttributeError:
             break
-    return list_of_content_links
+    return content_data

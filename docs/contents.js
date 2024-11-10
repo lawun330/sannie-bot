@@ -114,10 +114,14 @@ function createContentElement(content) {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'link-item';
     
-    const contentLink = createContentLink(content);
-    const copyButton = createCopyButton(content);
+    const scrollContainer = document.createElement('div');
+    scrollContainer.className = 'scroll-container';
     
-    contentDiv.appendChild(contentLink);
+    const contentLink = createContentLink(content);
+    const copyButton = createCopyButton(content.url);
+    
+    scrollContainer.appendChild(contentLink);
+    contentDiv.appendChild(scrollContainer);
     contentDiv.appendChild(copyButton);
     
     return contentDiv;
@@ -127,8 +131,9 @@ function createContentElement(content) {
 // Function to create the content link element
 function createContentLink(content) {
     const contentText = document.createElement('a');
-    contentText.href = content;
-    contentText.textContent = content;
+    contentText.href = content.url;
+    contentText.textContent = content.header;
+    contentText.title = content.url;
     contentText.target = '_blank';
     return contentText;
 }
