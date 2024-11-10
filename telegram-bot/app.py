@@ -2,8 +2,6 @@
 
 # import libraries
 import logging
-import requests
-import json
 from credentials import BOT_TOKEN, BOT_USERNAME
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo, InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import ApplicationBuilder, CallbackContext, CommandHandler, MessageHandler, ContextTypes, InlineQueryHandler, filters
