@@ -50,8 +50,10 @@ There are several folders and files in this repository-
 - The _pyproject.toml_ file contains the project dependencies and settings for a ruff check.
 - The _doc_ folder contains files related to front-end and the UI design.
     - This folder is essential to host GitHub pages.
+    - Refer to this [control flow documentation](https://github.com/lawun330/Customized-BBC-Crawler/blob/telegram-mini-app/flow.md) if you need help.
 - The _img_ folder contains images to use in the project.
 - The _telegram-bot_ folder contains scripts to manage and run the telegram bot.
+    - You need to create the `.env` file within the folder for your telegram bot token and username.
 
 ## Project Development
 Check all notebooks in the _notebooks_ folder for detailed documentations. You will learn how the customized web-crawler for this project is evolved from scratch.
