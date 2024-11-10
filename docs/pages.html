@@ -8,7 +8,19 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-cover flex items-center justify-center h-screen">
-    <div id="container"></div>
+    <div class="container">
+        <h1 class="title"><span id="title-content"></span><span id="topic-title"></span></h1>
+        <div id="pages-container" class="links-container"></div>
+        <div id="contents-container" class="links-container"></div>
+        <div class="input-group w-full">
+            <div class="button-row mb-4">
+                <button id="back-button" class="button w-full">Back to Main Page</button>
+            </div>
+            <div class="button-row">
+                <button id="back-to-pages" class="button" style="display: none;">Back to Page Selection</button>
+            </div>
+        </div>
+    </div>
     <script src="functions.js"></script>
     <script src="pages.js"></script>
 </body>

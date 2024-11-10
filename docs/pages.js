@@ -3,9 +3,8 @@
  * It manages the display and interaction with individual page links from a selected topic.
  * 
  * Connected files:
- * - templates/container.html: Template for the main container
  * - pages.html: Contains the DOM elements this script interacts with
- * - functions.js: Provides utility functions like showError(), sendDataToFastAPI(), and loadTemplate()
+ * - functions.js: Provides utility functions like showError(), sendDataToFastAPI()
  * - loading.html: Destination page after page selection
  * - api.py: FastAPI backend that receives the selected page data
  */
@@ -14,9 +13,6 @@
 let pagesContainer;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Load template first
-    await loadTemplate('container');
-    
     // Remove initial animation classes from the container
     const container = document.querySelector('.container');
     container.classList.remove('slide-left', 'slide-right', 'instant');
