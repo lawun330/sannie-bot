@@ -56,6 +56,7 @@ function setContainerVisibility() {
     }
 }
 
+
 // Function to set up the page title
 function setupPageTitle() {
     const urlParams = new URLSearchParams(window.location.search);
