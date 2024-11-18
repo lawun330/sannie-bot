@@ -113,7 +113,7 @@ uv venv
 ```
 5. Install dependencies with
 ```console
-uv pip install -r requirements
+uv pip install -r requirements.txt
 ```
 ## Hosting Servers
 - **Local HTTP Server**: Test your web application locally during development. The local HTTP server serves files from the current directory at port 9000 (arbitrary) with
