@@ -2,6 +2,7 @@
 
 # import libraries
 import time  # this module pauses the process
+import os
 import pandas as pd
 import redis  # this module tracks the scraping progress
 import requests  # this module helps us to download a web page
@@ -13,7 +14,8 @@ main_url = "https://www.bbc.com/burmese"
 
 # ## Initialization For Cache System
 # redis
-r = redis.Redis(host='localhost', port=6379, db=0)
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0') # get Redis URL from environment variable or use local Redis
+r = redis.from_url(redis_url) # create Redis client
 SCRAPING_KEY = "currently_scraping_url" # the directory name
 error_found = False
 
