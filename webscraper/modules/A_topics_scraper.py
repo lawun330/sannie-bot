@@ -6,7 +6,7 @@ import os
 # add the parent directory to sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # import modules from parent directory 
-from main import webScraper, getTopicsUrls
+from core_scraper import webScraper, getTopicsUrls
 
 # get the main url of the website
 main_url = "https://www.bbc.com/burmese"
