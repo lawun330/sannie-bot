@@ -13,6 +13,17 @@
  * through Redis caching and providing feedback through the UI.
  */
 
+// API Configuration
+const API_BASE_URL = (() => {
+    // If running on localhost (development), use local API
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:8000';
+    }
+    // If running on GitHub Pages (production), deploy FastAPI server
+    return 'https://customized-bbc-crawler-production.up.railway.app'; // -- MODIFY HERE --
+})();
+
+
 // Function to show error - globally accessible
 // Used in loading.js and throughout error handling
 function showError(message) {
@@ -50,7 +61,7 @@ function updateButtonText(button, text) {
 // Used in index.js and pages.js
 async function sendDataToFastAPI(endpoint, data) {
     try {
-        const response = await fetch(`http://localhost:8000${endpoint}`, {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,7 +85,7 @@ async function sendDataToFastAPI(endpoint, data) {
 // Used in pages.js, contents.js, and loading.js
 async function fetchItem(item) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/${item}`);
+        const response = await fetch(`${API_BASE_URL}/${item}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

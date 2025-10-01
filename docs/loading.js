@@ -7,13 +7,24 @@
  * - functions.js: Provides utility functions like showError()
  * - article.html: Destination page after successful content fetch
  * - api.py: FastAPI backend that provides content data
- */
+*/
 
 // Global variable declarations
 let loadingIndicator;
 let errorMessage;
 let backButton;
 let statusText;
+
+// API Configuration
+const API_BASE_URL = (() => {
+    // If running on localhost (development), use local API
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:8000';
+    }
+    // If running on GitHub Pages (production), deploy FastAPI server
+    return 'https://customized-bbc-crawler-production.up.railway.app'; // -- MODIFY HERE --
+})();
+
 
 // Main event listener for DOM load
 document.addEventListener('DOMContentLoaded', () => {
@@ -93,7 +104,7 @@ function updateStatus(message) {
 
 // Function to fetch pages, contents, or article - different from the global function in functions.js
 function fetchItem(endpoint) {
-    fetch(`http://127.0.0.1:8000/${endpoint}`)
+    fetch(`${API_BASE_URL}/${endpoint}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
