@@ -1,31 +1,39 @@
 # BBC Burmese Telegram Web App
+
 This project is still in the `developing` phase. The project aims to create a web app bot in Telegram. The bot crawls the **BBC Burmese** website to display news contents. This way, Telegram users can now read news without having to leave the app.
 
-## Manual
-You need the Telegram account to use this bot.
-- Chat the [bot](http://t.me/presenter_sannie_bot) directly with your account.
+## 1. 🚀 User Manual
 
-OR
-- You can also find my bot in the Telegram's search bar as follows.
+A Telegram account is required to use this bot.
+- **Direct Link**: Chat the [bot](http://t.me/presenter_sannie_bot) directly
+- **Search Method**: Find the bot in Telegram's search bar:
 ```console
 @presenter_sannie_bot
 ```
-Once, the bot is started, it will automatically greet you with a direct link to the website.
 
-I recommend using other methods to open the app without exiting the Telegram as this is the whole purpose. The bot supports
-- inline button
-- keyboard button
-- inline mode
+### 1.1. Bot Features
 
-Once the app is launched, you can enter a single link to read news content. If you do not have a particular link, choose a topic to get more links, copy a link, and then insert it.
+- **Inline Button** - Interactive buttons within messages
+- **Keyboard Button** - Custom keyboard for easy navigation  
+- **Inline Mode** - Search and share content directly from any chat
 
-## Current Features
-At the moment, there are two commands for my bot.
-1. [/start]() - greet and return the main web app
-2. [/help]() - describe how to use this bot
-3. [/keyboard]() - return the keyboard button
+### 1.2. Available Commands
 
-## Scraper's Potential
+1. `/start` - greet and return the main web app
+2. `/help` - describe how to use this bot
+3. `/keyboard` - return the keyboard button
+
+### 1.3. Using the Web App
+
+Once the bot is started, it will automatically greet with a direct link to the website.
+The user can then:
+- **Enter a single link** to read news content directly
+- **Browse by topic**: Choose a topic, then a page, then copy a link of a content to read
+
+***
+
+## 2. 📊 Current Version
+
 The webscraper can
 - scrape all topics (all pages of each topic) from BBC Burmese,
 - scrape Burmese contents with a filter,
@@ -33,36 +41,105 @@ The webscraper can
 - write spreadsheet data to Local DynamoDB,
 - store current URL in redis cache for internet loss recovery.
 
-## Future Improvements for Scraper
+### 2.1. Future Improvements
+
 - To write spreadsheet data to cloud DynamoDB
 - To use a modular approach than a single scraper script
+- To use Docker for local development
+- To make a compact repository
 
 ***
 
-# Building the Web App
-## Files and Directories
-There are several folders and files in this repository-
-- The _notebooks_ folder contains the jupyter notebooks used to develop and document the progress.
-- The _spreadsheets_ folder contains the exported spreadsheets. This directory is ignored onwards.
-- The _db_ folder contains the DynamoDBLocal database and related files.
-- The _webscraper_ folder contains the main Python script to perform the webscraping.
-    - During development, I recommend you to check _notebooks_ instead. 
-- The _pyproject.toml_ file contains the project dependencies and settings for a ruff check.
-- The _doc_ folder contains files related to front-end and the UI design.
-    - This folder is essential to host GitHub pages.
-    - Refer to this [control flow documentation](https://github.com/lawun330/Customized-BBC-Crawler/blob/telegram-mini-app/flow.md) if you need help.
-- The _img_ folder contains images to use in the project.
-- The _telegram-bot_ folder contains scripts to manage and run the telegram bot.
-    - You need to create the `.env` file within the folder for your telegram bot token and username.
+## 3. 📁 Files and Directories
 
-## Project Development
-Check all notebooks in the _notebooks_ folder for detailed documentations. You will learn how the customized web-crawler for this project is evolved from scratch.
-This crawler is combined with the other two parts: the front-end and the Telegram bot. Necessary scripts can be found in specified folders as above.
+- `/caching prototypes` - Development and testing files for caching system
+- `/db` - DynamoDB Local database files and scripts
+- `/docs` - Frontend files for GitHub Pages hosting (more info in `flow.md`)
+- `/img` - Project images and assets
+- `/notebooks` - Jupyter notebooks for webscraper development and documentation
+- `/spreadsheets` - Exported data (ignored in version control)
+- `/telegram-bot` - Telegram bot scripts (requires `.env` file for tokens)
+  - `app.py` - Main bot application
+  - `credentials.py` - Environment variable handler
+  - `requirements.txt` - Bot-specific dependencies
+  - `Procfile` - Bot deployment configuration for Railway
+- `/webscraper` - Main Python web scraping scripts and modules
+  - `/modules` - Modular scraping scripts
+- `api.py` - FastAPI server for web scraping endpoints
+- `flow.md` - Control flow documentation
+- `Procfile` - FastAPI deployment configuration for Railway
+- `pyproject.toml` - Project configuration and dependencies
+- `requirements.txt` - All dependencies
 
-## Project Requirements
+***
+
+## 4. 📈 Project Development
+
+1. **Web Scraper Development** - Check all notebooks in the `/notebooks` folder for detailed documentation on how the customized web-crawler evolved from scratch
+2. **Integration** - The web scraper is combined with two additional components:
+   - Frontend (web-hosted with GitHub Pages)
+   - Telegram bot (created to use the hosted frontend)
+3. **Local Development Setup** - Uses local Redis with manual execution of Python scripts:
+   - `api.py` - FastAPI server for web scraping endpoints
+   - `telegram-bot/app.py` - Telegram bot application
+4. **Deployment Configuration** - Railway hosts FastAPI, Telegram bot, and Redis with required environment variables set
+5. **Testing and Verification** - Test FastAPI endpoints via `<deployment-URL>/docs` or `<deployment-URL>/redoc` and verify Redis cache
+
+***
+
+## 5. 🖥️ Hosting
+
+### 5.1. Local Servers
+
+- **Local HTTP Server**: Test web app locally (port 9000 is arbitrary - any port can be used)
+```console
+python -m http.server 9000
+```
+- **Telegram Bot**: Run from `/telegram-bot` directory
+```console
+python app.py
+```
+- **Redis**: Cache for connection recovery
+  1. Install Redis-client on the local device
+  2. Open Ubuntu Terminal
+  3. Run:
+```console
+redis-cli
+```
+- **DynamoDB**: Local database storage
+```console
+DynamoDB_init.bat
+```
+- **FastAPI**: Backend API server
+```console
+# Option 1: Direct Python script
+python api.py
+
+# Option 2: Using uvicorn command
+uvicorn api:app --reload
+```
+
+### 5.2. Cloud Deployment (Railway)
+
+1. **Create Railway Account**: Sign up at [railway.app](https://railway.app)
+2. **Connect GitHub Repository**: Link GitHub repo to Railway
+3. **Deploy FastAPI**: Railway automatically detects and deploys the FastAPI app
+4. **Add Redis Service**: Create a Redis database service in Railway
+5. **Deploy Telegram Bot**: Create separate Railway service for the bot
+6. **Set Environment Variables**:
+   - `REDIS_URL` - Redis connection string from Railway
+   - `BOT_TOKEN` - Telegram bot token
+   - `BOT_USERNAME` - Bot username
+
+NOTE: The Python scripts (`api.py` and `telegram-bot/app.py`) work seamlessly for both local and cloud deployment without requiring endpoint or API URL modifications.
+
+***
+
+## 6. 🔧 Setup and Installation
+
 To install DynamoDB locally, check [here](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html).
 
-- (Optional Config) If you download the compressed file, extract it and move to "C:".
+- (Optional Config) If the compressed file is downloaded, extract it and move to "C:".
 
 To run DynamoDB locally, [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) is recommended.
 
@@ -74,8 +151,10 @@ To run DynamoDB locally, [JDK 17](https://www.oracle.com/java/technologies/downl
 To install Redis for client, check [here](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/).
 To install Ubuntu on Windows with WSL, check [here](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-You may also have to install additional libraries and modules. 
-### A. Simple but Slow Installation
+Additional libraries and modules may also need to be installed.
+
+### 6.1. Simple but Slow Installation
+
 1. Create a virtual environment with Python
 ```console
 python -m venv <env-name>
@@ -91,19 +170,21 @@ conda create --name <env-name>
 ```
 - For the virtual environment created with conda
 ```console
-conda activate "C:\Users\<your-pc-username>\anaconda3\envs\<env-name>"
+conda activate "C:\Users\<pc-username>\anaconda3\envs\<env-name>"
 ```
 3. Install dependencies with
 ```console
 pip install -r requirements.txt
 ```
-### B. Fast but Complicated Installation
+
+### 6.2. Fast but Complicated Installation
+
 1. Install [uv](https://github.com/astral-sh/uv): an extremely fast Python package and project manager, written in Rust.
 ```console
 pip install uv
 ```
-2. Go to your working directory.
-3. Create a virtual environment in your working directory with uv.
+2. Navigate to the working directory.
+3. Create a virtual environment in the working directory with uv.
 ```console
 uv venv
 ```
@@ -115,24 +196,8 @@ uv venv
 ```console
 uv pip install -r requirements.txt
 ```
-## Hosting Servers
-- **Local HTTP Server**: Test your web application locally during development. The local HTTP server serves files from the current directory at port 9000 (arbitrary) with
-```console
-python -m http.server 9000
-```
-- **Telegram**: You have to navigate to the directory `/telegram-bot` and host the Telegram bot with
-```console
-python app.py
-```
-- **Redis**: You need the Redis-client installed on your device. It caches the current link to continue fetching if the connection is lost. Open the Ubuntu Terminal and run
-```console
-redis-cli
-```
-- **DynamoDB**: You need to host the DynamoDB to store data. Navigate to the directory `/db` and run
-```console
-DynamoDB_init.bat
-```
-- **FastAPI**: Run the following to work with the website requests
-```console
-uvicorn api:app --reload
-```
+
+***
+
+## License
+This project is intended for educational purposes.
