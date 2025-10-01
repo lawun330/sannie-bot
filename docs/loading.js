@@ -16,15 +16,7 @@ let backButton;
 let statusText;
 
 // API Configuration
-const API_BASE_URL = (() => {
-    // If running on localhost (development), use local API
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:8000';
-    }
-    // If running on GitHub Pages (production), deploy FastAPI server
-    return 'https://customized-bbc-crawler-production.up.railway.app'; // -- MODIFY HERE --
-})();
-
+// use the one from functions.js
 
 // Main event listener for DOM load
 document.addEventListener('DOMContentLoaded', () => {
