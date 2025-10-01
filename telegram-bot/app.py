@@ -7,7 +7,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, Keyboar
 from telegram.ext import ApplicationBuilder, CallbackContext, CommandHandler, MessageHandler, ContextTypes, InlineQueryHandler, filters
 import uuid
 
-web_link = "https://lawun330.github.io/Customized-BBC-Crawler/"
+web_link = "https://lawun330.github.io/sannie-bot/"
 
 # initiate logging
 logging.basicConfig(
