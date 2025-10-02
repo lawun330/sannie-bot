@@ -20,7 +20,7 @@ const API_BASE_URL = (() => {
         return 'http://localhost:8000';
     }
     // If running on GitHub Pages (production), deploy FastAPI server
-    return 'https://customized-bbc-crawler-production.up.railway.app'; // -- MODIFY HERE --
+    return 'https://sannie-bot-production.up.railway.app'; // -- MODIFY HERE --
 })();
 
 
