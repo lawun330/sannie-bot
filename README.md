@@ -45,8 +45,7 @@ The webscraper can
 
 - To write spreadsheet data to cloud DynamoDB
 - To use a modular approach than a single scraper script
-- To use Docker for local development
-- To make a compact repository
+- To make the repository more compact
 
 ***
 
@@ -89,37 +88,61 @@ The webscraper can
 
 ## 5. 🖥️ Hosting
 
-### 5.1. Local Servers
+### 5.1. Local Server (No Docker)
 
-- **Local HTTP Server**: Test web app locally (port 9000 is arbitrary - any port can be used)
-```console
-python -m http.server 9000
-```
-- **Telegram Bot**: Run from `/telegram-bot` directory
-```console
-python app.py
-```
-- **Redis**: Cache for connection recovery
-  1. Install Redis-client on the local device
-  2. Open Ubuntu Terminal
-  3. Run:
-```console
-redis-cli
-```
-- **DynamoDB**: Local database storage
-```console
-DynamoDB_init.bat
-```
-- **FastAPI**: Backend API server
+1. **Start FastAPI Backend**
 ```console
 # Option 1: Direct Python script
 python api.py
 
-# Option 2: Using uvicorn command
+# Option 2: CLI
 uvicorn api:app --reload
 ```
+- FastAPI will run on http://localhost:8000
+- API documentation available at http://localhost:8000/docs
+2. **Start Redis Cache**: Redis-client must be already installed on the local device
+```console
+# Open Ubuntu terminal and run:
+redis-cli
+```
+3. **Start Local Frontend Server**
+```console
+# Navigate to "/docs"
+cd docs
+# Start HTTP server (port 9000 is arbitrary - any port can be used)
+python -m http.server 9000
+```
+4. **Test Web App**: Test web app locally at http://localhost:9000 by choosing topic → page → content → article
+5. **Start/Test Telegram Bot**
+```console
+# Navigate to "/telegram-bot"
+cd telegram-bot
+# Start Telegram bot
+python app.py
+```
+6. **Start DynamoDB (Optional)**
+```console
+DynamoDB_init.bat
+```
 
-### 5.2. Cloud Deployment (Railway)
+### 5.2. Local Server (Docker)
+
+1. **Start All Services**: Use Docker Compose to start FastAPI, Redis, and Telegram Bot
+```console
+docker-compose up --build
+```
+- FastAPI will run on http://localhost:8000
+- API documentation available at http://localhost:8000/docs
+2. **Start Local Frontend Server**
+```console
+# Navigate to "/docs"
+cd docs
+# Start HTTP server (port 9000 is arbitrary - any port can be used)
+python -m http.server 9000
+```
+3. **Test All Services**: Test web app locally at http://localhost:9000 by choosing topic → page → content → article
+
+### 5.3. Cloud Deployment (Railway)
 
 1. **Create Railway Account**: Sign up at [railway.app](https://railway.app)
 2. **Connect GitHub Repository**: Link GitHub repo to Railway
@@ -153,48 +176,47 @@ To install Ubuntu on Windows with WSL, check [here](https://learn.microsoft.com/
 
 Additional libraries and modules may also need to be installed.
 
-### 6.1. Simple but Slow Installation
+### 6.1. Simple Setup
 
-1. Create a virtual environment with Python
+1. Create a virtual environment
 ```console
+# Option 1: Python
 python -m venv <env-name>
-```
-OR with conda.
-```console
+# Option 2: Conda
 conda create --name <env-name>
 ```
-2. Activate the virtual environment.
-- For the virtual environment created with Python
+2. Activate the virtual environment
 ```console
+# Option 1: Python virtual environment
 <env-name>\Scripts\activate
-```
-- For the virtual environment created with conda
-```console
+# Option 2: Conda virtual environment
 conda activate "C:\Users\<pc-username>\anaconda3\envs\<env-name>"
 ```
-3. Install dependencies with
-```console
-pip install -r requirements.txt
-```
-
-### 6.2. Fast but Complicated Installation
-
-1. Install [uv](https://github.com/astral-sh/uv): an extremely fast Python package and project manager, written in Rust.
+3. Install [uv](https://github.com/astral-sh/uv)
 ```console
 pip install uv
 ```
-2. Navigate to the working directory.
-3. Create a virtual environment in the working directory with uv.
-```console
-uv venv
-```
-4. Activate the virtual environment.
-```console
-.venv\Scripts\activate
-```
-5. Install dependencies with
+4. Navigate to the working directory
+5. Install dependencies
 ```console
 uv pip install -r requirements.txt
+```
+
+### 6.2. Docker Setup
+
+1. Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+2. Install dependencies
+```console
+docker-compose up --build
+```
+
+### 6.3. Environment Configuration
+
+1. Get bot credentials from [@BotFather](https://t.me/botfather) on Telegram
+2. Create a `.env` file in the root with bot credentials
+```console
+BOT_TOKEN=actual_bot_token_here
+BOT_USERNAME=bot_username_here
 ```
 
 ***
