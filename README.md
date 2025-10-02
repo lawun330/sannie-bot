@@ -60,13 +60,16 @@ The webscraper can
 - `/telegram-bot` - Telegram bot scripts (requires `.env` file for tokens)
   - `app.py` - Main bot application
   - `credentials.py` - Environment variable handler
-  - `requirements.txt` - Bot-specific dependencies
+  - `Dockerfile` - Bot container configuration
   - `Procfile` - Bot deployment configuration for Railway
+  - `requirements.txt` - Bot-specific dependencies
 - `/webscraper` - Main Python web scraping scripts and modules
   - `/modules` - Modular scraping scripts
 - `api.py` - FastAPI server for web scraping endpoints
+- `docker-compose.yml` - Orchestrates all Docker services (FastAPI, Redis, Telegram Bot)
+- `Dockerfile` - FastAPI app container configuration
 - `flow.md` - Control flow documentation
-- `Procfile` - FastAPI deployment configuration for Railway
+- `Procfile` - FastAPI app deployment configuration for Railway
 - `pyproject.toml` - Project configuration and dependencies
 - `requirements.txt` - All dependencies
 
