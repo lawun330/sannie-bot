@@ -61,7 +61,7 @@ The webscraper can
   - `app.py` - Main bot application
   - `credentials.py` - Environment variable handler
   - `Dockerfile` - Bot container configuration
-  - `Procfile` - Bot deployment configuration for Railway
+  - `Procfile` - Bot deployment configuration (Railway / Render)
   - `requirements.txt` - Bot-specific dependencies
 - `/webscraper` - Main Python web scraping scripts and modules
   - `/modules` - Modular scraping scripts
@@ -69,7 +69,7 @@ The webscraper can
 - `docker-compose.yml` - Orchestrates all Docker services (FastAPI, Redis, Telegram Bot)
 - `Dockerfile` - FastAPI app container configuration
 - `flow.md` - Control flow documentation
-- `Procfile` - FastAPI app deployment configuration for Railway
+- `Procfile` - FastAPI app deployment configuration (Railway / Render)
 - `pyproject.toml` - Project configuration and dependencies
 - `requirements.txt` - All dependencies
 
@@ -84,7 +84,7 @@ The webscraper can
 3. **Local Development Setup** - Uses local Redis with manual execution of Python scripts:
    - `api.py` - FastAPI server for web scraping endpoints
    - `telegram-bot/app.py` - Telegram bot application
-4. **Deployment Configuration** - Railway hosts FastAPI, Telegram bot, and Redis with required environment variables set
+4. **Deployment Configuration** - The same codebase deploys to Railway or Render; see sections 5.3 and 5.4
 5. **Testing and Verification** - Test FastAPI endpoints via `<deployment-URL>/docs` or `<deployment-URL>/redoc` and verify Redis cache
 
 ***
@@ -157,7 +157,19 @@ python -m http.server 9000
    - `BOT_TOKEN` - Telegram bot token
    - `BOT_USERNAME` - Bot username
 
-NOTE: The Python scripts (`api.py` and `telegram-bot/app.py`) work seamlessly for both local and cloud deployment without requiring endpoint or API URL modifications.
+### 5.4. Cloud Deployment (Render)
+
+1. **Create Render Account**: Sign up at [render.com](https://render.com)
+2. **Connect GitHub Repository**: Link GitHub repo to Render
+3. **Deploy FastAPI**: Create a web service; use Docker and the root `Dockerfile`
+4. **Add Redis**: Use [Upstash](https://upstash.com) or another provider; set `REDIS_URL` on the web service
+5. **Deploy Telegram Bot**: Create a background worker; use Docker and `telegram-bot/Dockerfile` (build context: repo root)
+6. **Set Environment Variables**:
+   - `REDIS_URL` - on the web service (e.g. from Upstash)
+   - `BOT_TOKEN` - Telegram bot token
+   - `BOT_USERNAME` - Bot username
+
+NOTE: The same codebase works on both Railway and Render. Set the production API URL in `docs/functions.js` to match the deployment URL (see 6.4).
 
 ***
 
@@ -221,6 +233,15 @@ docker-compose up --build
 BOT_TOKEN=actual_bot_token_here
 BOT_USERNAME=bot_username_here
 ```
+
+### 6.4. Production API URL (Railway or Render)
+
+The frontend in `docs/` is served from GitHub Pages and calls the deployed API. In `docs/functions.js`, set the placeholder `DEPLOYED_API_URL` to the actual API base URL:
+
+- **Railway**: Railway web service URL (e.g. `https://app.up.railway.app`)
+- **Render**: Render Web Service URL (e.g. `https://app.onrender.com`)
+
+Commit and push so the GitHub Pages site uses the correct API. The same repo works on either platform; only this URL needs to match the deployed API.
 
 ***
 

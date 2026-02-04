@@ -21,5 +21,6 @@ COPY . .
 # Expose the port that FastAPI runs on
 EXPOSE 8000
 
-# Command to run the application
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
+# Command to run the FastAPI app
+# Use PORT from environment so the same image works on Railway or Render
+CMD ["sh", "-c", "uvicorn api:app --host 0.0.0.0 --port ${PORT:-8000}"]

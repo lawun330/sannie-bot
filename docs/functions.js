@@ -13,14 +13,15 @@
  * through Redis caching and providing feedback through the UI.
  */
 
-// API Configuration
+// API Configuration (same codebase works with Railway or Render)
 const API_BASE_URL = (() => {
     // If running on localhost (development), use local API
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         return 'http://localhost:8000';
     }
-    // If running on GitHub Pages (production), deploy FastAPI server
-    return 'https://sannie-bot-production.up.railway.app'; // -- MODIFY HERE --
+    // If running on GitHub Pages (production), set this to the deployed API URL (Railway or Render)
+    // e.g. https://app.onrender.com or https://app.up.railway.app
+    return 'https://sannie-bot-backend-fastapi.onrender.com';  // ########## UPDATE HERE ##########
 })();
 
 
