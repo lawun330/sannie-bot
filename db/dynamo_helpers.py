@@ -16,7 +16,7 @@ import json
 def _dynamo_available():
     '''Return True if all required environment variables are set, False otherwise.'''
     return all([
-        os.getenv('AWS_ACCESS_KEY_ID'),
+        os.getenv('AWS_ACCESS_KEY'),
         os.getenv('AWS_SECRET_ACCESS_KEY'),
         os.getenv('AWS_REGION'),
         os.getenv('DYNAMODB_TABLE_PAGES'),
@@ -38,6 +38,8 @@ def _get_client():
         _dynamodb = boto3.resource(
             'dynamodb',
             region_name=os.getenv('AWS_REGION'),
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
         )
         _tables = {
             'pages': _dynamodb.Table(os.getenv('DYNAMODB_TABLE_PAGES')),
