@@ -26,7 +26,7 @@ In each endpoint, the data is deserialized back to Python objects before being r
 '''
 
 # import libraries
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import redis
 import time
@@ -37,6 +37,8 @@ import json
 from webscraper.modules import fetch_pages  # B_pages_scraper
 from webscraper.modules import fetch_content_links  # C_content_links_scraper
 from webscraper.modules import get_article  # D_content_or_article_scraper
+
+from db import dynamo_helpers
 
 # create FastAPI app
 app = FastAPI()
@@ -60,8 +62,7 @@ redis_javascript_cache_keys = ["chosen_topic", "chosen_page", "chosen_content"]
 redis_scraped_cache_keys = ["pages", "contents", "article"]
 
 # variables
-CACHE_EXPIRATION = 3600  # Set expiration time for cache entries (1 hour)
-error_found = False
+CACHE_EXPIRATION = 3600  # set expiration time for cache entries (1 hour)
 
 # SETTING CHOSEN TOPIC, PAGE, AND CONTENT
 # such data are sent from javascript to the API
@@ -134,60 +135,84 @@ def read_content():
 
 # A. WORKING WITH CHOSEN TOPIC
 # /pages contains links of pages of the chosen topic
-    # cache the links of pages in Redis
-    # retrieve the links of pages from cache
+    # retrieve from Redis -> fail -> retrieve from DynamoDB -> fail -> scrape the pages -> save to both
 @app.get("/pages")
 def read_pages():
     topic_link = redis_client.get(redis_javascript_cache_keys[0]) # get chosen topic link from cache
-    try:    # try scraping the links of pages
-        data = fetch_pages(topic_link)
-    except:   # if connection error, retry until the connection comes back
-        error_found = True
-        while(error_found):
+    if not topic_link:
+        raise HTTPException(status_code=400, detail="No topic chosen")
+    redis_key = "pages:" + topic_link # create Redis cache key
+    cached = redis_client.get(redis_key) # retrieve from Redis
+    if cached:
+        return json.loads(cached)
+    data = dynamo_helpers.get_pages(topic_link) # if not found, retrieve from DynamoDB
+    if data is not None:
+        redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis
+        return data
+    while True: # if not found in Redis or DynamoDB, scrape the pages
+        try:
+            data = fetch_pages(topic_link)
+            break
+        except Exception:
             print("  - Connection Error. Retrying in 5 seconds...")
             time.sleep(5) # wait 5 seconds
-            data = fetch_pages(topic_link) # try scraping again
-    redis_client.set(redis_scraped_cache_keys[0], json.dumps(data))  # Serialize data to JSON string to cache links of pages
-    cache = redis_client.get(redis_scraped_cache_keys[0]) # get links of pages from cache
-    return json.loads(cache)  # Deserialize the JSON string back to a Python object
+    dynamo_helpers.put_pages(topic_link, data) # save to DynamoDB
+    redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis
+    return data
 
 # B. WORKING WITH CHOSEN PAGE
 # /contents contains links of contents of the chosen page
-    # cache the links of contents in Redis
-    # retrieve the links of contents from cache
+    # retrieve from Redis -> fail -> retrieve from DynamoDB -> fail -> scrape the contents -> save to both
 @app.get("/contents")
 def read_contents():
-    page_link = redis_client.get(redis_javascript_cache_keys[1])  # get chosen page link from cache
-    try:    # try scraping the links of contents
-        data = fetch_content_links(page_link)
-    except:   # if connection error, retry until the connection comes back
-        error_found = True
-        while(error_found):
-            print("  - Connection Error. Retrying in 5 seconds...")
-            time.sleep(5)  # wait 5 seconds
-            data = fetch_content_links(page_link)  # try scraping again
-    redis_client.set(redis_scraped_cache_keys[1], json.dumps(data))  # Serialize to JSON string to cache links of contents
-    cache = redis_client.get(redis_scraped_cache_keys[1])  # get links of contents from cache
-    return json.loads(cache)  # Deserialize back to Python object
-
-# C. WORKING WITH CHOSEN CONTENT/ARTICLE
-# /article contains the content/article of the chosen content link
-    # cache the content/article in Redis
-    # retrieve the content/article from cache
-@app.get("/article")
-def read_article():
-    content_link = redis_client.get(redis_javascript_cache_keys[2]) # get chosen content link from cache 
-    try:    # try scraping the content/article
-        data = get_article(content_link)
-    except:   # if connection error, retry until the connection comes back
-        error_found = True
-        while(error_found):
+    page_link = redis_client.get(redis_javascript_cache_keys[1]) # get chosen page link from cache
+    if not page_link:
+        raise HTTPException(status_code=400, detail="No page chosen")
+    redis_key = "contents:" + page_link # create Redis cache key
+    cached = redis_client.get(redis_key) # retrieve from Redis
+    if cached:
+        return json.loads(cached)
+    data = dynamo_helpers.get_contents(page_link) # if not found, retrieve from DynamoDB
+    if data is not None:
+        redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis
+        return data
+    while True: # if not found in Redis or DynamoDB, scrape the contents
+        try:
+            data = fetch_content_links(page_link)
+            break
+        except Exception:
             print("  - Connection Error. Retrying in 5 seconds...")
             time.sleep(5) # wait 5 seconds
-            data = get_article(content_link) # try scraping again
-    redis_client.set(redis_scraped_cache_keys[2], json.dumps(data)) # Serialize to JSON string to cache content/article
-    cache = redis_client.get(redis_scraped_cache_keys[2]) # get content/article from cache
-    return json.loads(cache) # Deserialize back to Python object
+    dynamo_helpers.put_contents(page_link, data) # save to DynamoDB
+    redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis
+    return data
+
+# C. WORKING WITH CHOSEN CONTENT/ARTICLE
+# /article contains the content/article of the chosen content
+    # retrieve from Redis -> fail -> retrieve from DynamoDB -> fail -> scrape the content/article -> save to both
+@app.get("/article")
+def read_article():
+    content_link = redis_client.get(redis_javascript_cache_keys[2]) # get chosen content link from cache
+    if not content_link:
+        raise HTTPException(status_code=400, detail="No content chosen")
+    redis_key = "article:" + content_link # create Redis cache key
+    cached = redis_client.get(redis_key) # retrieve from Redis
+    if cached:
+        return json.loads(cached)
+    data = dynamo_helpers.get_article(content_link) # if not found, retrieve from DynamoDB
+    if data is not None:
+        redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis
+        return data
+    while True: # if not found in Redis or DynamoDB, scrape the content/article
+        try:
+            data = get_article(content_link)
+            break
+        except Exception:
+            print("  - Connection Error. Retrying in 5 seconds...")
+            time.sleep(5) # wait 5 seconds
+    dynamo_helpers.put_article(content_link, data) # save to DynamoDB
+    redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis
+    return data
 
 
 # run the app
