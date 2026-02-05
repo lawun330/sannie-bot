@@ -7,11 +7,22 @@
  * - FastAPI backend communication
  * - Data fetching and event handling
  * - Template loading
+ * - Telegram Web App integration
  * 
  * The functions handle both user interface interactions and server communication,
  * supporting the application's web scraping capabilities while maintaining state
  * through Redis caching and providing feedback through the UI.
  */
+
+// Initialize Telegram Web App and expand viewport if running in Telegram
+(function() {
+    if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand(); // expand the web app to fill available space
+        tg.enableClosingConfirmation(); // optional: confirm before closing
+    }
+})();
 
 // API Configuration (same codebase works with Railway or Render)
 const API_BASE_URL = (() => {
