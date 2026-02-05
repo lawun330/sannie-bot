@@ -105,6 +105,18 @@ Note: Save this Redis URL - it will be needed when deploying FastAPI (Step 3).
 
 Note: Save this Redis URL - it will be needed when deploying FastAPI (Step 3).
 
+#### 2.B.3 Flush Database (Clear All Cache)
+
+To clear all cached data from Upstash Redis:
+
+- Go to the Upstash dashboard
+- Select the Redis database
+- Navigate to the "CLI"
+- Run the command: `FLUSHDB`
+- This will delete all keys in the current database
+
+**Warning**: This action cannot be undone. All cached data will be permanently deleted. Use this only when testing or when a fresh cache is needed.
+
 ## Step 3: Deploy FastAPI Backend
 
 Choose one of the following platforms to deploy the FastAPI backend:
