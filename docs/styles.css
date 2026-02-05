@@ -244,11 +244,24 @@ body::before {
     display: flex;
     gap: 0.5rem;
     justify-content: center;
+    align-items: stretch;
 }
 
 .page-navigation .nav-button {
+    padding: 0.5rem 1rem;
+}
+
+/* Arrow buttons has narrower width */
+.page-navigation #prev-page-button,
+.page-navigation #next-page-button {
+    flex: 0 0 auto;
+    width: 50px;
+    min-width: 50px;
+}
+
+/* Middle button takes remaining space */
+.page-navigation #back-to-pages-button {
     flex: 1;
-    max-width: 150px;
 }
 
 
