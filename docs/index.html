@@ -10,7 +10,17 @@
 </head>
 <body class="bg-cover flex items-center justify-center h-screen">
     <div class="container">
-        <h1 class="title">ဘီဘီစီမြန်မာသတင်းဌာန</h1>
+        <div class="title-container">
+            <h1 class="title">ဘီဘီစီမြန်မာသတင်းဌာန</h1>
+            <button id="help-button" class="help-button" aria-label="အကူအညီ">?</button>
+        </div>
+        <div id="help-backdrop" class="help-backdrop" style="display: none;"></div>
+        <div id="help-message" class="help-message" style="display: none;">
+            <div class="help-message-content">
+                <button id="help-close" class="help-close">×</button>
+                <p id="help-text">သတင်းအမျိုးအစားကိုရွေးခြယ်ပြီး သတင်းဖတ်နိုင်ပါသည်။ အကယ်၍ သတင်းတစ်ခုခု၏ လင့်ခ်ရှိပြီးသားဖြင့်လျှင် လင့်ခ်ကိုထည့်ပြီး သတင်းဖတ်နိုင်ပါသည်။</p>
+            </div>
+        </div>
         <div class="input-group">
             <label class="label">ရွေးချယ်ပါ:</label>
             <div class="radio-group">

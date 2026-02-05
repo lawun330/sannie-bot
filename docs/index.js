@@ -65,6 +65,53 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('back-button').addEventListener('click', handleBackNavigation);
     }
 
+    // Help button functionality
+    const helpButton = document.getElementById('help-button');
+    const helpMessage = document.getElementById('help-message');
+    const helpBackdrop = document.getElementById('help-backdrop');
+    const helpClose = document.getElementById('help-close');
+    
+    function showHelp() {
+        if (helpBackdrop) helpBackdrop.style.display = 'block';
+        if (helpMessage) helpMessage.style.display = 'block';
+    }
+    
+    function hideHelp() {
+        if (helpBackdrop) helpBackdrop.style.display = 'none';
+        if (helpMessage) helpMessage.style.display = 'none';
+    }
+    
+    if (helpButton && helpMessage) {
+        // Show help message on click
+        helpButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showHelp();
+        });
+        
+        // Close help message when clicking close button
+        if (helpClose) {
+            helpClose.addEventListener('click', () => {
+                hideHelp();
+            });
+        }
+        
+        // Close help message when clicking backdrop or outside
+        if (helpBackdrop) {
+            helpBackdrop.addEventListener('click', () => {
+                hideHelp();
+            });
+        }
+        
+        document.addEventListener('click', (e) => {
+            if (helpMessage.style.display === 'block' && 
+                !helpMessage.contains(e.target) && 
+                e.target !== helpButton &&
+                e.target !== helpBackdrop) {
+                hideHelp();
+            }
+        });
+    }
+
     console.groupEnd(); // End console group
 });
 
