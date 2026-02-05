@@ -224,14 +224,10 @@ function createContentElement(content) {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'link-item';
     
-    const scrollContainer = document.createElement('div');
-    scrollContainer.className = 'scroll-container';
-    
     const contentLink = createContentLink(content);
     const viewButton = createViewButton(content.url);
     
-    scrollContainer.appendChild(contentLink);
-    contentDiv.appendChild(scrollContainer);
+    contentDiv.appendChild(contentLink);
     contentDiv.appendChild(viewButton);
     
     return contentDiv;
