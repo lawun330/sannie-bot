@@ -132,6 +132,26 @@ body::before {
     margin-left: auto;
 }
 
+/* Compact read button on contents list */
+.link-item .compact-read-button {
+    flex: 0 0 auto;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    position: absolute;
+    right: 4rem;
+    width: auto;
+    background-color: #ef4444;
+    color: white;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.link-item .compact-read-button:hover {
+    background-color: #dc2626;
+    transform: scale(1.05);
+}
+
 
 /* Link item styling */
 .link-item {

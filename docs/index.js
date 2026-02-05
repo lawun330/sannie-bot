@@ -26,9 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     singleUrlContainer = document.getElementById('single-url-container');
     singleUrlInput = document.getElementById('single-url-input');
     topicSelect = document.getElementById('topic-select');
-    getLinksContainer = document.getElementById('get-links-container');
-    getLinksButton = document.getElementById('get-links-button');
-    readLinkButton = document.getElementById('read-link-button');
+    const actionButton = document.getElementById('action-button');
 
     // Log available topics
     const topicDropdown = document.getElementById('topic-dropdown');
@@ -47,14 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Event handler for getting links from selected topic
-    if (getLinksButton) {
-        getLinksButton.addEventListener('click', handleGetLinks);
-    }
+    // Set initial button state (Topic is selected by default)
+    updateActionButton('topic');
 
-    // Event handler for reading single URL content
-    if (readLinkButton) {
-        readLinkButton.addEventListener('click', handleReadLink);
+    // Event handler for action button (toggles between Get Links and Read the Link)
+    if (actionButton) {
+        actionButton.addEventListener('click', () => {
+            const selectedOption = document.querySelector('input[name="option"]:checked').value;
+            if (selectedOption === 'topic') {
+                handleGetLinks();
+            } else {
+                handleReadLink();
+            }
+        });
     }
 
     // Back button navigation handler
@@ -70,11 +73,25 @@ document.addEventListener('DOMContentLoaded', () => {
 function handleRadioChange(value) {
     // Toggle UI elements based on the selected radio button
     if (value === 'insert-link') {
-        toggleElements(true, singleUrlContainer, readLinkButton);
-        toggleElements(false, topicSelect, getLinksContainer);
+        toggleElements(true, singleUrlContainer);
+        toggleElements(false, topicSelect);
     } else if (value === 'topic') {
-        toggleElements(false, singleUrlContainer, readLinkButton);
-        toggleElements(true, topicSelect, getLinksContainer);
+        toggleElements(false, singleUrlContainer);
+        toggleElements(true, topicSelect);
+    }
+    // Update action button text and functionality
+    updateActionButton(value);
+}
+
+// Function to update action button text based on selected option
+function updateActionButton(selectedValue) {
+    const actionButton = document.getElementById('action-button');
+    if (actionButton) {
+        if (selectedValue === 'topic') {
+            actionButton.textContent = 'Get Links';
+        } else {
+            actionButton.textContent = 'Read the Link';
+        }
     }
 }
 

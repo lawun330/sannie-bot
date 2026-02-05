@@ -270,7 +270,7 @@ function createCopyButton(content) {
 function createViewButton(contentUrl) {
     const viewButton = document.createElement('button');
     viewButton.textContent = 'Read';
-    viewButton.className = 'viewlinks-button';
+    viewButton.className = 'button compact-read-button';
     
     viewButton.addEventListener('click', async () => {
         try {
