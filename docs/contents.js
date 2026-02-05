@@ -14,6 +14,8 @@ let contentsContainer;
 let pagesContainer;
 let backButton;
 let backToPagesButton;
+let pagesList = [];
+let currentPageIndex = -1;
 
 // Main event listener for DOM load
 document.addEventListener('DOMContentLoaded', async () => {
@@ -80,9 +82,109 @@ function setupNavigationButtons() {
 }
 
 
+// Function to set up page navigation (Previous/Next buttons)
+function setupPageNavigation() {
+    // Remove existing nav buttons if any
+    const existingNav = document.getElementById('page-navigation');
+    if (existingNav) {
+        existingNav.remove();
+    }
+    
+    // Create navigation container
+    const navContainer = document.createElement('div');
+    navContainer.id = 'page-navigation';
+    navContainer.className = 'input-group w-full';
+    navContainer.style.marginTop = '1rem';
+    
+    const buttonRow = document.createElement('div');
+    buttonRow.className = 'button-row';
+    
+    // Previous button
+    const prevButton = document.createElement('button');
+    prevButton.textContent = '← Previous Page';
+    prevButton.className = 'button';
+    prevButton.disabled = currentPageIndex <= 0;
+    prevButton.addEventListener('click', () => navigateToPage(currentPageIndex - 1));
+    
+    // Next button
+    const nextButton = document.createElement('button');
+    nextButton.textContent = 'Next Page →';
+    nextButton.className = 'button';
+    nextButton.disabled = currentPageIndex >= pagesList.length - 1;
+    nextButton.addEventListener('click', () => navigateToPage(currentPageIndex + 1));
+    
+    buttonRow.appendChild(prevButton);
+    buttonRow.appendChild(nextButton);
+    navContainer.appendChild(buttonRow);
+    
+    // Insert after contents container
+    const container = document.querySelector('.container');
+    const inputGroup = container.querySelector('.input-group');
+    container.insertBefore(navContainer, inputGroup);
+}
+
+
+// Function to navigate to a different page
+async function navigateToPage(newIndex) {
+    if (newIndex < 0 || newIndex >= pagesList.length) {
+        return;
+    }
+    
+    try {
+        const page = pagesList[newIndex];
+        const pageUrl = formatPageUrl(page);
+        
+        await sendDataToFastAPI('/set_chosen_page', { page: pageUrl });
+        
+        // Update stored index
+        currentPageIndex = newIndex;
+        sessionStorage.setItem('currentPageIndex', newIndex.toString());
+        
+        // Reload contents
+        const data = await fetchItem('contents');
+        displayContents(data);
+        
+        // Update navigation buttons
+        setupPageNavigation();
+    } catch (error) {
+        showError(`Failed to navigate to page: ${error.message}`);
+    }
+}
+
+
+// Function to format page URL (same as in pages.js)
+function formatPageUrl(pageUrl) {
+    if (typeof pageUrl === 'function') {
+        pageUrl = pageUrl();
+    }
+    
+    if (typeof pageUrl === 'string' && !pageUrl.startsWith('http')) {
+        pageUrl = `https://www.bbc.com${pageUrl.startsWith('/') ? '' : '/'}${pageUrl}`;
+    }
+    
+    return pageUrl;
+}
+
+
 // Function to initialize the page
 async function initializePage() {
     try {
+        // Load pages list and current index from sessionStorage for navigation
+        const storedPagesList = sessionStorage.getItem('pagesList');
+        const storedPageIndex = sessionStorage.getItem('currentPageIndex');
+        
+        if (storedPagesList) {
+            pagesList = JSON.parse(storedPagesList);
+        }
+        if (storedPageIndex !== null) {
+            currentPageIndex = parseInt(storedPageIndex, 10);
+        }
+        
+        // Setup navigation buttons if pages list exists
+        if (pagesList.length > 0 && currentPageIndex >= 0) {
+            setupPageNavigation();
+        }
+        
         const data = await fetchItem('contents');
         displayContents(data);
     } catch (error) {
@@ -105,7 +207,7 @@ function displayContents(contents) {
 }
 
 
-// Function to create a content element with its copy button
+// Function to create a content element with its copy button and view button
 function createContentElement(content) {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'link-item';
@@ -115,10 +217,12 @@ function createContentElement(content) {
     
     const contentLink = createContentLink(content);
     const copyButton = createCopyButton(content.url);
+    const viewButton = createViewButton(content.url);
     
     scrollContainer.appendChild(contentLink);
     contentDiv.appendChild(scrollContainer);
     contentDiv.appendChild(copyButton);
+    contentDiv.appendChild(viewButton);
     
     return contentDiv;
 }
@@ -147,4 +251,23 @@ function createCopyButton(content) {
     });
     
     return copyButton;
+}
+
+
+// Function to create the view article button for a content link
+function createViewButton(contentUrl) {
+    const viewButton = document.createElement('button');
+    viewButton.textContent = 'View Article';
+    viewButton.className = 'viewlinks-button';
+    
+    viewButton.addEventListener('click', async () => {
+        try {
+            await sendDataToFastAPI('/set_chosen_content', { content: contentUrl });
+            window.location.href = 'loading.html?source=contents';
+        } catch (error) {
+            showError(`Failed to set chosen content: ${error.message}`);
+        }
+    });
+    
+    return viewButton;
 }

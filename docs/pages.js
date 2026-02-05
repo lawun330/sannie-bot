@@ -85,9 +85,9 @@ function createPageElement(page, index) {
     pageDiv.className = 'link-item';
     
     const pageText = document.createElement('span');
-    pageText.textContent = page.title || `Page ${index + 1}`;
+    pageText.textContent = `Page ${index + 1}`;
     
-    const viewButton = createViewButton(page, pageText.textContent);
+    const viewButton = createViewButton(page, `Page ${index + 1}`, index);
     
     pageDiv.appendChild(pageText);
     pageDiv.appendChild(viewButton);
@@ -97,13 +97,13 @@ function createPageElement(page, index) {
 
 
 // Function to create and configure the view button for a page
-function createViewButton(page, pageTitle) {
+function createViewButton(page, pageTitle, pageIndex) {
     const viewButton = document.createElement('button');
     viewButton.textContent = 'View Contents';
     viewButton.className = 'viewlinks-button';
     
     viewButton.addEventListener('click', async () => {
-        await handleViewButtonClick(page, pageTitle);
+        await handleViewButtonClick(page, pageTitle, pageIndex);
     });
     
     return viewButton;
@@ -111,12 +111,17 @@ function createViewButton(page, pageTitle) {
 
 
 // Function to handle view button click events
-async function handleViewButtonClick(page, pageTitle) {
+async function handleViewButtonClick(page, pageTitle, pageIndex) {
     try {
         const pageUrl = formatPageUrl(page);
         console.log('Selected Page URL:', pageUrl);
 
         await sendDataToFastAPI('/set_chosen_page', { page: pageUrl });
+        
+        // Store pages list and current index for navigation
+        const pagesData = await fetchItem('pages');
+        sessionStorage.setItem('pagesList', JSON.stringify(pagesData));
+        sessionStorage.setItem('currentPageIndex', pageIndex.toString());
         
         console.log('Redirecting to loading.html...');
         redirectToLoading(pageTitle);
