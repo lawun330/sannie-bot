@@ -5,7 +5,7 @@ import time  # this module pauses the process
 import os
 import pandas as pd
 import redis  # this module tracks the scraping progress
-import requests  # this module helps us to download a web page
+import requests  # this module helps download a web page
 from bs4 import BeautifulSoup  # this module helps in web scrapping
 
 # the main website url
@@ -66,7 +66,7 @@ def soupParser(soup):
     datetime_soup = soup.find_all("time", {"class":"promo-timestamp"}) # filter datetime
     return news_headers_soup, datetime_soup
 
-# function to extract Burmese content from a content url of one topic
+# function to extract Burmese content/article from a content/article url of one topic
 def contentScraper(content_url, soup):
     burmese_content = ""
     alphabets = ['a', 'b', 'c', 'd', 'e',

@@ -1,12 +1,14 @@
 /**
- * This file handles the article display interface of the BBC Burmese News application.
- * It manages the display of article content and provides copy/save functionality.
+ * This file handles the content/article display interface of the BBC Burmese News application.
+ * It manages the display of content/article and provides copy/save functionality.
+ * Content/article is fetched from the API which implements Redis + DynamoDB caching strategy.
+ * Users can copy the content/article to clipboard or save it as a text file.
  * 
  * Connected files:
  * - article.html: Contains the DOM elements this script interacts with
  * - functions.js: Provides utility functions like showError(), copyToClipboard(), and fetchItem()
- * - loading.html: Source page that redirects here
- * - api.py: FastAPI backend that provides article data
+ * - loading.html: Intermediate page that fetches content/article and redirects here
+ * - api.py: FastAPI backend that implements Redis + DynamoDB caching strategy
  */
 
 // Global variable declarations
@@ -14,14 +16,9 @@ let contentContainer;
 let saveButton;
 let backButton;
 let copyButton;
-let container;
 
 // Main event listener for DOM load
 document.addEventListener('DOMContentLoaded', async () => {
-    // Remove initial animation classes from the container
-    container = document.querySelector('.container');
-    container.classList.remove('slide-left', 'slide-right', 'instant');
-    
     // Get references to important DOM elements
     contentContainer = document.getElementById('content-container');
     saveButton = document.getElementById('save-button');
@@ -85,33 +82,33 @@ function downloadTextFile(content, filename) {
 }
 
 
-// Function to fetch article content
+// Function to fetch content/article
 async function fetchContent() {
     try {
         const data = await fetchItem('article');
         return data;
     } catch (error) {
-        showError('Failed to fetch content. Please try again later.');
+        showError('Failed to fetch content/article. Please try again later.');
     }
 }
 
 
-// Function to initialize the page content
+// Function to initialize the page content/article
 async function initializePage() {
     try {
         const content = await fetchContent();
         displayContent(content);
     } catch (error) {
-        showError('Error loading content. Please try again.');
+        showError('Error loading content/article. Please try again.');
     }
 }
 
 
-// Function to display content
+// Function to display content/article
 function displayContent(content) {
     if (content) {
         contentContainer.textContent = content;
     } else {
-        contentContainer.textContent = 'No content available.';
+        contentContainer.textContent = 'No content/article available.';
     }
 }

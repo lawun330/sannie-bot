@@ -23,6 +23,7 @@ if __name__ == "__main__":
 
 # function implementation
 def get_article(content_url):
+    # get content/article from content/article link
     content_soup = webScraper(content_url)
     parsed_content = contentScraper(content_url, content_soup)
     return parsed_content

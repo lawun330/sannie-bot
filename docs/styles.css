@@ -51,6 +51,7 @@ body::before {
     gap: 0.5rem;
 }
 
+
 /* Title styling */
 .title {
     font-size: 1.25rem;
@@ -65,6 +66,7 @@ body::before {
     box-sizing: border-box;
     flex: 1;
 }
+
 
 /* Help button styling */
 .help-button {
@@ -91,6 +93,7 @@ body::before {
     transform: scale(1.1);
 }
 
+
 /* Help message backdrop */
 .help-backdrop {
     position: fixed;
@@ -102,7 +105,8 @@ body::before {
     z-index: 999;
 }
 
-/* Help message tooltip/modal */
+
+/* Help message modal */
 .help-message {
     position: fixed;
     top: 50%;
@@ -159,6 +163,7 @@ body::before {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+
 
 /* Responsive title sizing for smaller screens */
 @media (max-width: 480px) {
@@ -249,9 +254,10 @@ body::before {
     flex: 1;
 }
 
-.button.w-full { /* For "Back to Main Page" button */
+.button.w-full {
     width: 100%;
 }
+
 
 /* Compact page view button on pages list */
 .page-view-button {
@@ -260,6 +266,7 @@ body::before {
     font-size: 0.8rem;
     margin-left: auto;
 }
+
 
 /* Compact read button on contents list */
 .link-item .compact-read-button {
@@ -296,50 +303,8 @@ body::before {
 }
 
 
-/* Scroll container styling */
-.scroll-container {
-    flex: 1;
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    min-width: 0;
-    padding-bottom: 5px;
-    margin-right: 100px;
-}
-
-.scroll-container::-webkit-scrollbar { /* Hide scrollbar for Chrome, Safari and Opera */
-    height: 4px;
-}
-
-.scroll-container::-webkit-scrollbar-thumb { /* Handle */
-    background: #cbd5e1;
-    border-radius: 2px;
-}
-    
-.scroll-container::-webkit-scrollbar-thumb:hover { /* Handle on hover */
-    background: #94a3b8;
-}
-
-
-/* Button styling within link items */
-.link-item .viewlinks-button, .link-item .copy-button {
-    position: absolute;
-    right: 1rem;
-    width: auto;
-    background-color: #ef4444;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
-}
-
-.link-item .viewlinks-button:hover, .link-item .copy-button:hover {
-    background-color: #dc2626;
-    transform: scale(1.05);
-}
-
-.link-item .copy-button:disabled, #article-copy-button:disabled {
+/* Button disabled state */
+#article-copy-button:disabled {
     background-color: #9ca3af;
     cursor: not-allowed;
     transform: none;
@@ -396,7 +361,8 @@ body::before {
     padding: 0.5rem 1rem;
 }
 
-/* Arrow buttons has narrower width */
+
+/* Arrow buttons styling */
 .page-navigation #prev-page-button,
 .page-navigation #next-page-button {
     flex: 0 0 auto;
@@ -404,7 +370,8 @@ body::before {
     min-width: 50px;
 }
 
-/* Middle button takes remaining space */
+
+/* Middle button styling */
 .page-navigation #back-to-pages-button {
     flex: 1;
 }

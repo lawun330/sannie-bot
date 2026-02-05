@@ -6,7 +6,7 @@ import sys
 import pandas as pd
 
 
-def format_csv(file): # change the file name to the file you want to format
+def format_csv(file): # change the file name to the file to format
 
     # Define a new file name and path
     file_name = os.path.basename(file)

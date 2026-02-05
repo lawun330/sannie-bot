@@ -6,12 +6,12 @@
  * - UI element manipulation
  * - FastAPI backend communication
  * - Data fetching and event handling
- * - Template loading
  * - Telegram Web App integration
  * 
  * The functions handle both user interface interactions and server communication,
  * supporting the application's web scraping capabilities while maintaining state
- * through Redis caching and providing feedback through the UI.
+ * through Redis caching and DynamoDB permanent storage, providing feedback through the UI.
+ * The backend implements a three-tier caching strategy: Redis (fast) -> DynamoDB (permanent) -> Scrape.
  */
 
 // Initialize Telegram Web App and expand viewport if running in Telegram
@@ -23,6 +23,7 @@
         tg.enableClosingConfirmation(); // optional: confirm before closing
     }
 })();
+
 
 // API Configuration (same codebase works with Railway or Render)
 const API_BASE_URL = (() => {
@@ -93,7 +94,7 @@ async function sendDataToFastAPI(endpoint, data) {
 }
 
 
-// Function to fetch pages, contents, or article - globally accessible
+// Function to fetch pages, contents, or content/article - globally accessible
 // Used in pages.js, contents.js, and loading.js
 async function fetchItem(item) {
     try {
@@ -115,30 +116,5 @@ async function fetchItem(item) {
         console.error('Error:', error.message);
         showError(`Failed to fetch ${item}: ${error.message}`);
         throw error;
-    }
-}
-
-
-// Function to load template - globally accessible
-// Used in pages.js and contents.js
-async function loadTemplate(containerId) {
-    try {
-        const response = await fetch('templates/container.html');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        // Get the template HTML
-        const template = await response.text();
-
-        // Parse the template HTML
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(template, 'text/html');
-
-        // Replace the entire body content
-        document.body.innerHTML = doc.body.innerHTML;
-    } catch (error) {
-        console.error('Error loading template:', error);
-        showError('Failed to load template');
     }
 }

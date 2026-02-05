@@ -1,4 +1,4 @@
-'''This script is used to get the list of content links from a particular page link.'''
+'''This script is used to get the list of content/article links from a particular page link.'''
 
 import sys
 import os
@@ -15,14 +15,14 @@ if __name__ == "__main__":
     # get a page
     chosen_page_url = 'https://www.bbc.com/burmese/topics/c404v08p1wxt?page=35' # example
 
-    # to store all content links of the page
+    # to store all content/article links of the page
     content_data = []
 
     # get the relevant part of the soup for the page
     soup = webScraper(chosen_page_url) 
     news_headers_soup, datetime_soup = soupParser(soup)
 
-    # store all content links of the page
+    # store all content/article links of the page
     for i in range(len(news_headers_soup)):
         try:
             content_url = news_headers_soup[i].attrs['href']

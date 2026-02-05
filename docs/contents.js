@@ -1,12 +1,18 @@
 /**
- * This file handles the content selection interface of the BBC Burmese News application.
- * It manages the display and interaction with individual content links from a selected page.
+ * This file handles the content/article selection interface of the BBC Burmese News application.
+ * It manages the display and interaction with individual content/article links from a selected page.
+ * Features include:
+ * - Direct "Read" buttons for each content/article link (no copy-paste needed)
+ * - Page navigation with Previous (←) and Next (→) buttons
+ * - Dynamic page title updates when navigating between pages
+ * - Back to page selection button for easy navigation
+ * Pages list and current index are loaded from sessionStorage to enable seamless navigation.
  * 
  * Connected files:
  * - contents.html: Contains the DOM elements this script interacts with
  * - functions.js: Provides utility functions like showError(), copyToClipboard(), and updateButtonText()
- * - loading.html: Destination page after content selection
- * - api.py: FastAPI backend that provides content data
+ * - loading.html: Intermediate page that fetches content/article and redirects
+ * - api.py: FastAPI backend that implements Redis + DynamoDB caching strategy
  */
 
 // Global variable declarations
@@ -245,7 +251,7 @@ function createContentLink(content) {
 }
 
 
-// Function to create the view article button for a content link
+// Function to create the view content/article button for a content/article link
 function createViewButton(contentUrl) {
     const viewButton = document.createElement('button');
     viewButton.textContent = 'ဖတ်မည်';
@@ -256,7 +262,7 @@ function createViewButton(contentUrl) {
             await sendDataToFastAPI('/set_chosen_content', { content: contentUrl });
             window.location.href = 'loading.html?source=contents';
         } catch (error) {
-            showError(`Failed to set chosen content: ${error.message}`);
+            showError(`Failed to set chosen content/article: ${error.message}`);
         }
     });
     

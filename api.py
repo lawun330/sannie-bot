@@ -1,33 +1,42 @@
 '''
 This script is the API for the BBC Burmese News website.
-It uses redis to cache the data so that the data is not scraped again.
+It implements a three-tier caching strategy: Redis (fast cache), DynamoDB (permanent storage), and web scraping.
 
 There is a series of scraping process:
 - scrape topic links from the main page (already done)
 - scrape links of pages from a topic link
-- scrape links of contents from a page link
-- scrape content/article from a content link
+- scrape links of content/article from a page link
+- scrape content/article from a content/article link
+
+Data retrieval flow for each endpoint:
+1. Check Redis cache first (fastest access)
+2. If Redis miss, check DynamoDB (permanent storage)
+3. If DynamoDB hit, return data and update Redis cache
+4. If DynamoDB miss, scrape from BBC Burmese website
+5. Save fresh data to both DynamoDB (permanent) and Redis (cache)
 
 Topic links are already associated with the dropdown menu in the index page.
 The user can select a topic from the dropdown menu to view the pages of the topic.
-The user can select a page to view all available contents of the page.
-The user can select a content url to copy and return to the index page.
-The user can insert a url in the index page to read the content/article in the article page.
+The user can select a page to view all available content/article links of the page.
+The user can click "Read" button to directly view a content/article.
+The user can insert a URL in the index page to read the content/article directly.
 
 The API is used by the following files:
-- index.js: to get topic links and display them in the dropdown menu
-- loading.js: to test data completion by fetching data from the cache to continue the redirecting process
-- pages.js: to get page links and display them in the container
-- contents.js: to get content links and display them in the container
+- index.js: to get topic links and display them in the dropdown menu, handle direct URL input
+- loading.js: to fetch data and redirect to appropriate pages
+- pages.js: to get page links and display them with view buttons
+- contents.js: to get content/article links and display them with read buttons, handle page navigation
 - article.js: to get content/article and display it
 
 In each endpoint, the data is serialized to JSON strings to be stored in Redis because Redis can only store strings.
 In each endpoint, the data is deserialized back to Python objects before being returned to the client.
+DynamoDB stores data as JSON strings in the "data" attribute of each table item.
 '''
 
 # import libraries
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from db import dynamo_helpers
 import redis
 import time
 import os
@@ -37,8 +46,6 @@ import json
 from webscraper.modules import fetch_pages  # B_pages_scraper
 from webscraper.modules import fetch_content_links  # C_content_links_scraper
 from webscraper.modules import get_article  # D_content_or_article_scraper
-
-from db import dynamo_helpers
 
 # create FastAPI app
 app = FastAPI()
@@ -63,8 +70,10 @@ redis_scraped_cache_keys = ["pages", "contents", "article"]
 
 # variables
 CACHE_EXPIRATION = 3600  # set expiration time for cache entries (1 hour)
+SCRAPE_RETRY_INTERVAL = 5  # set retry interval for scraping (5 seconds)
 
-# SETTING CHOSEN TOPIC, PAGE, AND CONTENT
+
+# SETTING CHOSEN TOPIC, PAGE, AND CONTENT/ARTICLE
 # such data are sent from javascript to the API
 # cache them in Redis
 @app.post("/set_chosen_topic")
@@ -103,10 +112,10 @@ async def set_content(request: Request):
         data = await request.json()
         content_link = data.get('content')
         if not content_link:
-            return {"error": "No content link provided"}
+            return {"error": "No content/article link provided"}
         
         redis_client.setex(redis_javascript_cache_keys[2], CACHE_EXPIRATION, content_link)
-        return {"message": "Content set successfully"}
+        return {"message": "Content/article set successfully"}
     except redis.RedisError as e:
         return {"error": f"Redis error: {str(e)}"}
     except Exception as e:
@@ -114,7 +123,7 @@ async def set_content(request: Request):
 
 
 # DEBUGGING
-# read the chosen topic, page, and content from cache with fastAPI
+# read the chosen topic, page, and content/article from cache with fastAPI
 @app.get("/get_chosen_topic")
 def read_topic():
     cache = redis_client.get(redis_javascript_cache_keys[0])
@@ -131,7 +140,7 @@ def read_content():
     return cache
 
 
-# GETTING CHOSEN TOPIC, PAGE, AND CONTENT
+# GETTING CHOSEN TOPIC, PAGE, AND CONTENT/ARTICLE
 
 # A. WORKING WITH CHOSEN TOPIC
 # /pages contains links of pages of the chosen topic
@@ -155,10 +164,11 @@ def read_pages():
             break
         except Exception:
             print("  - Connection Error. Retrying in 5 seconds...")
-            time.sleep(5) # wait 5 seconds
-    dynamo_helpers.put_pages(topic_link, data) # save to DynamoDB
-    redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis
+            time.sleep(SCRAPE_RETRY_INTERVAL) # wait for retry interval
+    dynamo_helpers.put_pages(topic_link, data) # save to DynamoDB (permanent storage)
+    redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis (cache)
     return data
+
 
 # B. WORKING WITH CHOSEN PAGE
 # /contents contains links of contents of the chosen page
@@ -182,19 +192,20 @@ def read_contents():
             break
         except Exception:
             print("  - Connection Error. Retrying in 5 seconds...")
-            time.sleep(5) # wait 5 seconds
-    dynamo_helpers.put_contents(page_link, data) # save to DynamoDB
-    redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis
+            time.sleep(SCRAPE_RETRY_INTERVAL) # wait for retry interval
+    dynamo_helpers.put_contents(page_link, data) # save to DynamoDB (permanent storage)
+    redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis (cache)
     return data
+
 
 # C. WORKING WITH CHOSEN CONTENT/ARTICLE
 # /article contains the content/article of the chosen content
     # retrieve from Redis -> fail -> retrieve from DynamoDB -> fail -> scrape the content/article -> save to both
 @app.get("/article")
 def read_article():
-    content_link = redis_client.get(redis_javascript_cache_keys[2]) # get chosen content link from cache
+    content_link = redis_client.get(redis_javascript_cache_keys[2]) # get chosen content/article link from cache
     if not content_link:
-        raise HTTPException(status_code=400, detail="No content chosen")
+        raise HTTPException(status_code=400, detail="No content/article chosen")
     redis_key = "article:" + content_link # create Redis cache key
     cached = redis_client.get(redis_key) # retrieve from Redis
     if cached:
@@ -209,9 +220,9 @@ def read_article():
             break
         except Exception:
             print("  - Connection Error. Retrying in 5 seconds...")
-            time.sleep(5) # wait 5 seconds
-    dynamo_helpers.put_article(content_link, data) # save to DynamoDB
-    redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis
+            time.sleep(SCRAPE_RETRY_INTERVAL) # wait for retry interval
+    dynamo_helpers.put_article(content_link, data) # save to DynamoDB (permanent storage)
+    redis_client.setex(redis_key, CACHE_EXPIRATION, json.dumps(data)) # save to Redis (cache)
     return data
 
 

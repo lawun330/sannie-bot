@@ -1,16 +1,19 @@
 /**
  * This file handles the loading interface of the BBC Burmese News application.
  * It manages the loading state and transitions between different content types.
+ * The page fetches data from the API (which checks Redis -> DynamoDB -> Scrapes if needed)
+ * and then redirects to the appropriate destination page based on the source parameter.
  * 
  * Connected files:
  * - loading.html: Contains the DOM elements this script interacts with
  * - functions.js: Provides utility functions like showError()
- * - article.html: Destination page after successful content fetch
- * - api.py: FastAPI backend that provides content data
+ * - pages.html: Destination page after fetching page links
+ * - contents.html: Destination page after fetching content/article links
+ * - article.html: Destination page after fetching content/article
+ * - api.py: FastAPI backend that implements Redis + DynamoDB caching strategy
 */
 
 // Global variable declarations
-let loadingIndicator;
 let errorMessage;
 let backButton;
 let statusText;
@@ -21,7 +24,6 @@ let statusText;
 // Main event listener for DOM load
 document.addEventListener('DOMContentLoaded', () => {
     // Get references to important DOM elements
-    loadingIndicator = document.getElementById('loading-indicator');
     errorMessage = document.getElementById('error-message');
     backButton = document.getElementById('back-button');
     statusText = document.getElementById('status');
@@ -73,23 +75,12 @@ function handleBackNavigation() {
 
 // Function to show error - different from the global function in functions.js
 function showError(message) {
-    if (loadingIndicator && errorMessage && statusText) {
-        loadingIndicator.classList.add('hidden');
+    if (errorMessage && statusText) {
         statusText.classList.add('hidden');
         errorMessage.textContent = message;
         errorMessage.classList.remove('hidden');
     } else {
         console.error('Error: DOM elements not found');
-    }
-}
-
-
-// Function to update loading status
-function updateStatus(message) {
-    if (statusText) {
-        statusText.textContent = message;
-    } else {
-        console.error('Error: Status element not found');
     }
 }
 

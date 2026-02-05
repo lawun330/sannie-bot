@@ -1,12 +1,14 @@
 /**
  * This file handles the page selection interface of the BBC Burmese News application.
  * It manages the display and interaction with individual page links from a selected topic.
+ * Each page link has a "View" button that allows direct navigation to view content/article links.
+ * The pages list and current index are stored in sessionStorage to enable navigation between pages.
  * 
  * Connected files:
  * - pages.html: Contains the DOM elements this script interacts with
  * - functions.js: Provides utility functions like showError(), sendDataToFastAPI()
- * - loading.html: Destination page after page selection
- * - api.py: FastAPI backend that receives the selected page data
+ * - loading.html: Intermediate page that fetches content/article links and redirects
+ * - api.py: FastAPI backend that implements Redis + DynamoDB caching strategy
  */
 
 // Global variable declarations

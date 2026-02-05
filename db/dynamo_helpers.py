@@ -1,11 +1,15 @@
 '''
 This script is for reading and writing scraped data to DynamoDB.
 It is used by api.py when the AWS environment variables and table names are set; otherwise no-op.
+DynamoDB serves as permanent storage in the three-tier caching strategy (Redis -> DynamoDB -> Scrape).
+
 The tables are:
-- sannie-pages (pk topic_url)
-- sannie-contents (pk page_url)
-- sannie-articles (pk content_url)
+- sannie-pages (pk topic_url) - stores page links for each topic
+- sannie-contents (pk page_url) - stores content/article links for each page
+- sannie-articles (pk content_url) - stores content/article data for each content/article URL
+
 The data is stored as a JSON string in the attribute "data".
+When data is retrieved from DynamoDB, it is also saved to Redis cache for faster subsequent access.
 '''
 
 # import libraries
@@ -106,7 +110,7 @@ def put_contents(page_url, data):
 
 
 def get_article(content_url):
-    '''Return article data for content_url, or None if not found.'''
+    '''Return content/article data for content_url, or None if not found.'''
     if not _get_client():
         return None
     try:
@@ -121,7 +125,7 @@ def get_article(content_url):
 
 
 def put_article(content_url, data):
-    '''Store article data for content_url.'''
+    '''Store content/article data for content_url.'''
     if not _get_client():
         return
     try:

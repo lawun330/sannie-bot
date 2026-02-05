@@ -1,22 +1,21 @@
 /**
  * This file contains the main event listener for the index page.
- * It handles the radio button selection, topic selection, and URL input.
- * It also includes helper functions for toggling UI elements and handling errors.
+ * It handles radio button selection, topic selection, and direct content/article URL input.
+ * The UI provides two modes:
+ * - Topic mode: Select a topic from dropdown, then click "Get Links" to view pages
+ * - Insert Link mode: Enter a content/article URL directly, then click "Read the Link" to view it
  * 
  * Connected files:
  * - index.html: Contains the DOM elements this script interacts with
  * - functions.js: Provides utility functions like showError() and sendDataToFastAPI()
- * - loading.html: Destination page after form submission
- * - api.py: FastAPI backend that receives the form data
+ * - loading.html: Intermediate page that fetches data and redirects
+ * - api.py: FastAPI backend that implements Redis + DynamoDB caching strategy
  */
 
 // Global variable declarations
 let singleUrlInput;
 let singleUrlContainer;
 let topicSelect;
-let getLinksContainer;
-let getLinksButton;
-let readLinkButton;
 
 // Main event listener for DOM load
 document.addEventListener('DOMContentLoaded', () => {
@@ -45,10 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Set initial button state (Topic is selected by default)
+    // Set initial button state 
+    // Topic is selected by default
     updateActionButton('topic');
 
-    // Event handler for action button (toggles between Get Links and Read the Link)
+    // Event handler for action button
+    // Toggles between Get Links and Read the Link
     if (actionButton) {
         actionButton.addEventListener('click', () => {
             const selectedOption = document.querySelector('input[name="option"]:checked').value;
@@ -112,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    console.groupEnd(); // End console group
+    console.groupEnd();
 });
 
 
@@ -130,6 +131,7 @@ function handleRadioChange(value) {
     updateActionButton(value);
 }
 
+
 // Function to update action button text based on selected option
 function updateActionButton(selectedValue) {
     const actionButton = document.getElementById('action-button');
@@ -143,15 +145,15 @@ function updateActionButton(selectedValue) {
 }
 
 
-// Helper function to toggle element visibility
+// Function to toggle element visibility
 function toggleElements(show, ...elements) {
     elements.forEach(element => {
-        if (element) element.style.display = show ? 'block' : 'none'; // block shows, none hides
+        if (element) element.style.display = show ? 'block' : 'none';
     });
 }
 
 
-// Handler for getting links from selected topic
+// Function to get links from selected topic
 async function handleGetLinks() {    
     // Check if a topic is selected
     const topicSelect = document.getElementById('topic-dropdown');
@@ -184,7 +186,7 @@ async function handleGetLinks() {
 }
 
 
-// Handler for reading content from a single URL
+// Function to read content/article from a single URL
 async function handleReadLink() {
     // Get the URL from the input field
     const url = singleUrlInput.value;
@@ -197,15 +199,15 @@ async function handleReadLink() {
         // Use sendDataToFastAPI instead of direct fetch
         await sendDataToFastAPI('/set_chosen_content', { content: url });
         
-        // Navigate to loading page for article
+        // Navigate to loading page for content/article
         window.location.href = `loading.html?source=contents`;
     } catch (error) {
-        showError(`Failed to fetch content: ${error.message}`);
+        showError(`Failed to fetch content/article: ${error.message}`);
     }
 }
 
 
-// Handler for back button navigation
+// Function to handle back button navigation
 function handleBackNavigation() {
     // Add slide-right animation class
     const container = document.querySelector('.container');
