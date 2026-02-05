@@ -88,9 +88,9 @@ The webscraper can
 
 ## 5. 📚 Documentation
 
-- `flow.md` - Control flow documentation and user journey
-- `DEVELOPMENT_GUIDE.md` - Local development setup and commands
-- `DEPLOYMENT_GUIDE.md` - Production deployment instructions (Railway/Render)
+- **[CONTROL_FLOW.md](CONTROL_FLOW.md)** - Control flow documentation and user journey
+- **[DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)** - Local development setup and commands
+- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Production deployment instructions (Railway/Render)
 
 ***
 
