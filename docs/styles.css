@@ -54,7 +54,7 @@ body::before {
 
 /* Title styling */
 .title {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 0;
     color: #ef4444;
@@ -168,7 +168,7 @@ body::before {
 /* Responsive title sizing for smaller screens */
 @media (max-width: 480px) {
     .title {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
     }
     
     .help-button {
