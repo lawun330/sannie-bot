@@ -59,7 +59,8 @@ def get_pages(topic_url):
         if not item or 'data' not in item:
             return None
         return json.loads(item['data'])
-    except Exception:
+    except Exception as e:
+        print("DynamoDB get_pages error:", e)
         return None
 
 
@@ -72,8 +73,8 @@ def put_pages(topic_url, data):
             'topic_url': topic_url,
             'data': json.dumps(data, ensure_ascii=False),
         })
-    except Exception:
-        pass
+    except Exception as e:
+        print("DynamoDB put_pages error:", e)
 
 
 def get_contents(page_url):
@@ -86,7 +87,8 @@ def get_contents(page_url):
         if not item or 'data' not in item:
             return None
         return json.loads(item['data'])
-    except Exception:
+    except Exception as e:
+        print("DynamoDB get_contents error:", e)
         return None
 
 
@@ -99,8 +101,8 @@ def put_contents(page_url, data):
             'page_url': page_url,
             'data': json.dumps(data, ensure_ascii=False),
         })
-    except Exception:
-        pass
+    except Exception as e:
+        print("DynamoDB put_contents error:", e)
 
 
 def get_article(content_url):
@@ -113,7 +115,8 @@ def get_article(content_url):
         if not item or 'data' not in item:
             return None
         return json.loads(item['data'])
-    except Exception:
+    except Exception as e:
+        print("DynamoDB get_article error:", e)
         return None
 
 
@@ -126,5 +129,5 @@ def put_article(content_url, data):
             'content_url': content_url,
             'data': json.dumps(data, ensure_ascii=False),
         })
-    except Exception:
-        pass
+    except Exception as e:
+        print("DynamoDB put_article error:", e)
