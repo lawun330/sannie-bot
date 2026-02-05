@@ -99,8 +99,8 @@ function createPageElement(page, index) {
 // Function to create and configure the view button for a page
 function createViewButton(page, pageTitle, pageIndex) {
     const viewButton = document.createElement('button');
-    viewButton.textContent = 'View Contents';
-    viewButton.className = 'viewlinks-button';
+    viewButton.textContent = 'View';
+    viewButton.className = 'button page-view-button';
     
     viewButton.addEventListener('click', async () => {
         await handleViewButtonClick(page, pageTitle, pageIndex);

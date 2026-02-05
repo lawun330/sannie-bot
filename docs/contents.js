@@ -269,7 +269,7 @@ function createCopyButton(content) {
 // Function to create the view article button for a content link
 function createViewButton(contentUrl) {
     const viewButton = document.createElement('button');
-    viewButton.textContent = 'View Article';
+    viewButton.textContent = 'Read';
     viewButton.className = 'viewlinks-button';
     
     viewButton.addEventListener('click', async () => {

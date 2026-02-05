@@ -124,6 +124,14 @@ body::before {
     width: 100%;
 }
 
+/* Compact page view button on pages list */
+.page-view-button {
+    flex: 0 0 auto;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    margin-left: auto;
+}
+
 
 /* Link item styling */
 .link-item {

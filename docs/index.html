@@ -14,20 +14,20 @@
             <label class="label">Select Option:</label>
             <div class="radio-group">
                 <label class="radio-label">
-                    <input type="radio" name="option" value="insert-link" checked class="radio">
-                    <span class="radio-text">Insert Link</span>
+                    <input type="radio" name="option" value="topic" checked class="radio">
+                    <span class="radio-text">Topic</span>
                 </label>
                 <label class="radio-label">
-                    <input type="radio" name="option" value="topic" class="radio">
-                    <span class="radio-text">Topic</span>
+                    <input type="radio" name="option" value="insert-link" class="radio">
+                    <span class="radio-text">Insert Link</span>
                 </label>
             </div>
         </div>
-        <div id="single-url-container" class="input-group">
+        <div id="single-url-container" class="input-group" style="display: none;">
             <label for="single-url-input" class="label">Enter URL:</label>
             <input id="single-url-input" type="text" placeholder="https://example.com" class="input">
         </div>
-        <div id="topic-select" class="input-group" style="display: none;">
+        <div id="topic-select" class="input-group">
             <label for="topic-dropdown" class="label">Select Category:</label>
             <select id="topic-dropdown" class="select">
                 <option value="ပင်မစာမျက်နှာ" data-url="https://www.bbc.com/burmese">ပင်မစာမျက်နှာ</option>
@@ -39,7 +39,7 @@
                 <option value="ဗီဒီယိုများ" data-url="https://www.bbc.com/burmese/topics/cj7v92le02qt">ဗီဒီယိုများ</option>
             </select>
         </div>
-        <div id="get-links-container" class="input-group" style="display: none;">
+        <div id="get-links-container" class="input-group">
             <button id="get-links-button" class="button">Get Links</button>
         </div>
         <div class="input-group">
