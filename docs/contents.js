@@ -60,15 +60,15 @@ function showContentsContainer() {
 // Function to create and initialize the page title element
 function createPageTitle() {
     const urlParams = new URLSearchParams(window.location.search);
-    let pageTitle = urlParams.get('pageTitle') || 'Unknown Page';
+    let pageTitle = urlParams.get('pageTitle') || 'မသိရသေးသောစာမျက်နှာ';
     
     // If pages list and current index exist, use that for title
     if (pagesList.length > 0 && currentPageIndex >= 0) {
-        pageTitle = `Page ${currentPageIndex + 1}`;
+        pageTitle = `စာမျက်နှာ ${currentPageIndex + 1}`;
     }
     
     const titleElement = document.getElementById('title-content');
-    titleElement.textContent = 'Contents for ';
+    titleElement.textContent = 'သတင်းခေါင်းစဉ်များ - ';
     
     const pageTitleSpan = document.createElement('span');
     pageTitleSpan.id = 'page-title';
@@ -138,7 +138,7 @@ async function navigateToPage(newIndex) {
         sessionStorage.setItem('currentPageIndex', newIndex.toString());
         
         // Update page title
-        updatePageTitle(`Page ${newIndex + 1}`);
+        updatePageTitle(`စာမျက်နှာ ${newIndex + 1}`);
         
         // Reload contents
         const data = await fetchItem('contents');
@@ -219,7 +219,7 @@ function displayContents(contents) {
 }
 
 
-// Function to create a content element with its copy button and view button
+// Function to create a content element with its read button
 function createContentElement(content) {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'link-item';
@@ -228,12 +228,10 @@ function createContentElement(content) {
     scrollContainer.className = 'scroll-container';
     
     const contentLink = createContentLink(content);
-    const copyButton = createCopyButton(content.url);
     const viewButton = createViewButton(content.url);
     
     scrollContainer.appendChild(contentLink);
     contentDiv.appendChild(scrollContainer);
-    contentDiv.appendChild(copyButton);
     contentDiv.appendChild(viewButton);
     
     return contentDiv;
@@ -251,25 +249,10 @@ function createContentLink(content) {
 }
 
 
-// Function to create the copy button for a content link
-function createCopyButton(content) {
-    const copyButton = document.createElement('button');
-    copyButton.textContent = 'Copy';
-    copyButton.className = 'copy-button';
-    
-    copyButton.addEventListener('click', () => {
-        copyToClipboard(content);
-        updateButtonText(copyButton, 'Copied!');
-    });
-    
-    return copyButton;
-}
-
-
 // Function to create the view article button for a content link
 function createViewButton(contentUrl) {
     const viewButton = document.createElement('button');
-    viewButton.textContent = 'Read';
+    viewButton.textContent = 'ဖတ်မည်';
     viewButton.className = 'button compact-read-button';
     
     viewButton.addEventListener('click', async () => {

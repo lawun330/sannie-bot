@@ -88,9 +88,9 @@ function updateActionButton(selectedValue) {
     const actionButton = document.getElementById('action-button');
     if (actionButton) {
         if (selectedValue === 'topic') {
-            actionButton.textContent = 'Get Links';
+            actionButton.textContent = 'ရွေးမည်';
         } else {
-            actionButton.textContent = 'Read the Link';
+            actionButton.textContent = 'ဖတ်မည်';
         }
     }
 }

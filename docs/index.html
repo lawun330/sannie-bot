@@ -9,26 +9,26 @@
 </head>
 <body class="bg-cover flex items-center justify-center h-screen">
     <div class="container">
-        <h1 class="title">BBC Burmese News</h1>
+        <h1 class="title">ဘီဘီစီမြန်မာသတင်းဌာန</h1>
         <div class="input-group">
-            <label class="label">Select Option:</label>
+            <label class="label">ရွေးချယ်ပါ:</label>
             <div class="radio-group">
                 <label class="radio-label">
                     <input type="radio" name="option" value="topic" checked class="radio">
-                    <span class="radio-text">Topic</span>
+                    <span class="radio-text">သတင်းအမျိုးအစားရွေးပြီးဖတ်မည်</span>
                 </label>
                 <label class="radio-label">
                     <input type="radio" name="option" value="insert-link" class="radio">
-                    <span class="radio-text">Insert Link</span>
+                    <span class="radio-text">သတင်းလင့်ခ်ထည့်ပြီးဖတ်မည်</span>
                 </label>
             </div>
         </div>
         <div id="single-url-container" class="input-group" style="display: none;">
-            <label for="single-url-input" class="label">Enter URL:</label>
+            <label for="single-url-input" class="label">လင့်ခ်ထည့်ပါ:</label>
             <input id="single-url-input" type="text" placeholder="https://example.com" class="input">
         </div>
         <div id="topic-select" class="input-group">
-            <label for="topic-dropdown" class="label">Select Category:</label>
+            <label for="topic-dropdown" class="label">သတင်းအမျိုးအစားရွေးပါ:</label>
             <select id="topic-dropdown" class="select">
                 <option value="ပင်မစာမျက်နှာ" data-url="https://www.bbc.com/burmese">ပင်မစာမျက်နှာ</option>
                 <option value="မြန်မာ့ရေးရာ" data-url="https://www.bbc.com/burmese/topics/c404v08p1wxt">မြန်မာ့ရေးရာ</option>
@@ -40,7 +40,7 @@
             </select>
         </div>
         <div id="action-button-container" class="input-group">
-            <button id="action-button" class="button">Get Links</button>
+            <button id="action-button" class="button">ရွေးမည်</button>
         </div>
     </div>
     <script src="index.js"></script>

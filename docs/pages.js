@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Get topic title from URL parameters and update page title
     const urlParams = new URLSearchParams(window.location.search);
-    const topicTitle = urlParams.get('topicTitle') || 'Unknown Topic';
+    const topicTitle = urlParams.get('topicTitle') || 'မသိရသေးသောအမျိုးအစား';
     updatePageTitle(topicTitle);
 
     // Add click event listener to the back button to return to index page
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Function to update the page title with topic information
 function updatePageTitle(topicTitle) {
     const titleElement = document.getElementById('title-content');
-    titleElement.textContent = 'Pages for ';
+    titleElement.textContent = 'စာမျက်နှာများ - ';
     
     const topicTitleSpan = document.createElement('span');
     topicTitleSpan.id = 'topic-title';
@@ -85,9 +85,9 @@ function createPageElement(page, index) {
     pageDiv.className = 'link-item';
     
     const pageText = document.createElement('span');
-    pageText.textContent = `Page ${index + 1}`;
+    pageText.textContent = `စာမျက်နှာ ${index + 1}`;
     
-    const viewButton = createViewButton(page, `Page ${index + 1}`, index);
+    const viewButton = createViewButton(page, `စာမျက်နှာ ${index + 1}`, index);
     
     pageDiv.appendChild(pageText);
     pageDiv.appendChild(viewButton);
@@ -99,7 +99,7 @@ function createPageElement(page, index) {
 // Function to create and configure the view button for a page
 function createViewButton(page, pageTitle, pageIndex) {
     const viewButton = document.createElement('button');
-    viewButton.textContent = 'View';
+    viewButton.textContent = 'ဝင်ကြည့်မည်';
     viewButton.className = 'button page-view-button';
     
     viewButton.addEventListener('click', async () => {
