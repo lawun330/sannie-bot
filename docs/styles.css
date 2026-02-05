@@ -234,6 +234,24 @@ body::before {
 }
 
 
+/* Page navigation styling */
+.page-navigation {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.page-navigation .button-row {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.page-navigation .nav-button {
+    flex: 1;
+    max-width: 150px;
+}
+
+
 /* Spinner animation for loading.html */
 @keyframes spin {
     0% { transform: rotate(0deg); }

@@ -13,6 +13,10 @@
 let contentsContainer;
 let pagesContainer;
 let backButton;
+let prevPageButton;
+let nextPageButton;
+let backToPagesButton;
+let pageNavigation;
 let pagesList = [];
 let currentPageIndex = -1;
 
@@ -26,23 +30,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     pagesContainer = document.getElementById('pages-container');
     contentsContainer = document.getElementById('contents-container');
     backButton = document.getElementById('back-button');
+    prevPageButton = document.getElementById('prev-page-button');
+    nextPageButton = document.getElementById('next-page-button');
+    backToPagesButton = document.getElementById('back-to-pages-button');
+    pageNavigation = document.getElementById('page-navigation');
 
     // Configure container visibility
-    setContainerVisibility();
+    showContentsContainer();
 
-    // Set up page title
-    setupPageTitle();
-
-    // Set up navigation buttons
-    setupNavigationButtons();
+    // Attach event handlers to navigation buttons
+    attachNavigationButtonHandlers();
 
     // Initialize the page
     initializePage();
 });
 
 
-// Function to set container visibility
-function setContainerVisibility() {
+// Function to show contents container and hide pages container
+function showContentsContainer() {
     if (pagesContainer && contentsContainer) {
         pagesContainer.style.display = 'none';
         contentsContainer.style.display = 'block';
@@ -52,10 +57,15 @@ function setContainerVisibility() {
 }
 
 
-// Function to set up the page title
-function setupPageTitle() {
+// Function to create and initialize the page title element
+function createPageTitle() {
     const urlParams = new URLSearchParams(window.location.search);
-    const pageTitle = urlParams.get('pageTitle') || 'Unknown Page';
+    let pageTitle = urlParams.get('pageTitle') || 'Unknown Page';
+    
+    // If pages list and current index exist, use that for title
+    if (pagesList.length > 0 && currentPageIndex >= 0) {
+        pageTitle = `Page ${currentPageIndex + 1}`;
+    }
     
     const titleElement = document.getElementById('title-content');
     titleElement.textContent = 'Contents for ';
@@ -67,71 +77,47 @@ function setupPageTitle() {
 }
 
 
-// Function to set up navigation buttons
-function setupNavigationButtons() {
+// Function to attach event handlers to navigation buttons
+function attachNavigationButtonHandlers() {
     backButton.addEventListener('click', () => {
         window.location.href = 'index.html';
     });
+    
+    if (prevPageButton) {
+        prevPageButton.addEventListener('click', () => navigateToPage(currentPageIndex - 1));
+    }
+    
+    if (nextPageButton) {
+        nextPageButton.addEventListener('click', () => navigateToPage(currentPageIndex + 1));
+    }
+    
+    if (backToPagesButton) {
+        backToPagesButton.addEventListener('click', () => {
+            window.location.href = 'pages.html';
+        });
+    }
 }
 
 
-// Function to set up page navigation (Previous/Next buttons)
-function setupPageNavigation() {
-    // Get or create navigation container
-    let navContainer = document.getElementById('page-navigation');
-    if (!navContainer) {
-        navContainer = document.createElement('div');
-        navContainer.id = 'page-navigation';
-        navContainer.className = 'input-group w-full';
-        navContainer.style.marginTop = '1rem';
-        
-        // Insert after contents container
-        const container = document.querySelector('.container');
-        const inputGroup = container.querySelector('.input-group');
-        container.insertBefore(navContainer, inputGroup);
-    } else {
-        // Clear existing buttons
-        navContainer.innerHTML = '';
+// Function to update page navigation visibility and button states
+function updatePageNavigationState() {
+    if (!pageNavigation || pagesList.length === 0 || currentPageIndex < 0) {
+        if (pageNavigation) {
+            pageNavigation.style.display = 'none';
+        }
+        return;
     }
     
-    const buttonRow = document.createElement('div');
-    buttonRow.className = 'button-row';
-    buttonRow.style.display = 'flex';
-    buttonRow.style.gap = '0.5rem';
-    buttonRow.style.justifyContent = 'center';
+    // Show navigation
+    pageNavigation.style.display = 'block';
     
-    // Previous button
-    const prevButton = document.createElement('button');
-    prevButton.textContent = '← Previous';
-    prevButton.className = 'button';
-    prevButton.style.flex = '1';
-    prevButton.style.maxWidth = '150px';
-    prevButton.disabled = currentPageIndex <= 0;
-    prevButton.addEventListener('click', () => navigateToPage(currentPageIndex - 1));
-    
-    // Back to Page Selection button
-    const backToPagesBtn = document.createElement('button');
-    backToPagesBtn.textContent = 'Back to Pages';
-    backToPagesBtn.className = 'button';
-    backToPagesBtn.style.flex = '1';
-    backToPagesBtn.style.maxWidth = '150px';
-    backToPagesBtn.addEventListener('click', () => {
-        window.location.href = 'pages.html';
-    });
-    
-    // Next button
-    const nextButton = document.createElement('button');
-    nextButton.textContent = 'Next →';
-    nextButton.className = 'button';
-    nextButton.style.flex = '1';
-    nextButton.style.maxWidth = '150px';
-    nextButton.disabled = currentPageIndex >= pagesList.length - 1;
-    nextButton.addEventListener('click', () => navigateToPage(currentPageIndex + 1));
-    
-    buttonRow.appendChild(prevButton);
-    buttonRow.appendChild(backToPagesBtn);
-    buttonRow.appendChild(nextButton);
-    navContainer.appendChild(buttonRow);
+    // Update button disabled states
+    if (prevPageButton) {
+        prevPageButton.disabled = currentPageIndex <= 0;
+    }
+    if (nextPageButton) {
+        nextPageButton.disabled = currentPageIndex >= pagesList.length - 1;
+    }
 }
 
 
@@ -151,14 +137,26 @@ async function navigateToPage(newIndex) {
         currentPageIndex = newIndex;
         sessionStorage.setItem('currentPageIndex', newIndex.toString());
         
+        // Update page title
+        updatePageTitle(`Page ${newIndex + 1}`);
+        
         // Reload contents
         const data = await fetchItem('contents');
         displayContents(data);
         
-        // Update navigation buttons
-        setupPageNavigation();
+        // Update navigation button states
+        updatePageNavigationState();
     } catch (error) {
         showError(`Failed to navigate to page: ${error.message}`);
+    }
+}
+
+
+// Function to update page title
+function updatePageTitle(pageTitleText) {
+    const pageTitleSpan = document.getElementById('page-title');
+    if (pageTitleSpan) {
+        pageTitleSpan.textContent = pageTitleText;
     }
 }
 
@@ -191,9 +189,12 @@ async function initializePage() {
             currentPageIndex = parseInt(storedPageIndex, 10);
         }
         
-        // Setup navigation buttons if pages list exists
+        // Create page title (after loading pages list and index)
+        createPageTitle();
+        
+        // Update navigation state if pages list exists
         if (pagesList.length > 0 && currentPageIndex >= 0) {
-            setupPageNavigation();
+            updatePageNavigationState();
         }
         
         const data = await fetchItem('contents');
