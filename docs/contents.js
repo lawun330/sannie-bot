@@ -13,7 +13,6 @@
 let contentsContainer;
 let pagesContainer;
 let backButton;
-let backToPagesButton;
 let pagesList = [];
 let currentPageIndex = -1;
 
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     pagesContainer = document.getElementById('pages-container');
     contentsContainer = document.getElementById('contents-container');
     backButton = document.getElementById('back-button');
-    backToPagesButton = document.getElementById('back-to-pages');
 
     // Configure container visibility
     setContainerVisibility();
@@ -45,10 +43,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Function to set container visibility
 function setContainerVisibility() {
-    if (pagesContainer && contentsContainer && backToPagesButton) {
+    if (pagesContainer && contentsContainer) {
         pagesContainer.style.display = 'none';
         contentsContainer.style.display = 'block';
-        backToPagesButton.style.display = 'block';
     } else {
         showError('Page elements not found. Please refresh the page.');
     }
@@ -75,52 +72,66 @@ function setupNavigationButtons() {
     backButton.addEventListener('click', () => {
         window.location.href = 'index.html';
     });
-
-    backToPagesButton.addEventListener('click', () => {
-        window.location.href = 'pages.html';
-    });
 }
 
 
 // Function to set up page navigation (Previous/Next buttons)
 function setupPageNavigation() {
-    // Remove existing nav buttons if any
-    const existingNav = document.getElementById('page-navigation');
-    if (existingNav) {
-        existingNav.remove();
+    // Get or create navigation container
+    let navContainer = document.getElementById('page-navigation');
+    if (!navContainer) {
+        navContainer = document.createElement('div');
+        navContainer.id = 'page-navigation';
+        navContainer.className = 'input-group w-full';
+        navContainer.style.marginTop = '1rem';
+        
+        // Insert after contents container
+        const container = document.querySelector('.container');
+        const inputGroup = container.querySelector('.input-group');
+        container.insertBefore(navContainer, inputGroup);
+    } else {
+        // Clear existing buttons
+        navContainer.innerHTML = '';
     }
-    
-    // Create navigation container
-    const navContainer = document.createElement('div');
-    navContainer.id = 'page-navigation';
-    navContainer.className = 'input-group w-full';
-    navContainer.style.marginTop = '1rem';
     
     const buttonRow = document.createElement('div');
     buttonRow.className = 'button-row';
+    buttonRow.style.display = 'flex';
+    buttonRow.style.gap = '0.5rem';
+    buttonRow.style.justifyContent = 'center';
     
     // Previous button
     const prevButton = document.createElement('button');
-    prevButton.textContent = '← Previous Page';
+    prevButton.textContent = '← Previous';
     prevButton.className = 'button';
+    prevButton.style.flex = '1';
+    prevButton.style.maxWidth = '150px';
     prevButton.disabled = currentPageIndex <= 0;
     prevButton.addEventListener('click', () => navigateToPage(currentPageIndex - 1));
     
+    // Back to Page Selection button
+    const backToPagesBtn = document.createElement('button');
+    backToPagesBtn.textContent = 'Back to Pages';
+    backToPagesBtn.className = 'button';
+    backToPagesBtn.style.flex = '1';
+    backToPagesBtn.style.maxWidth = '150px';
+    backToPagesBtn.addEventListener('click', () => {
+        window.location.href = 'pages.html';
+    });
+    
     // Next button
     const nextButton = document.createElement('button');
-    nextButton.textContent = 'Next Page →';
+    nextButton.textContent = 'Next →';
     nextButton.className = 'button';
+    nextButton.style.flex = '1';
+    nextButton.style.maxWidth = '150px';
     nextButton.disabled = currentPageIndex >= pagesList.length - 1;
     nextButton.addEventListener('click', () => navigateToPage(currentPageIndex + 1));
     
     buttonRow.appendChild(prevButton);
+    buttonRow.appendChild(backToPagesBtn);
     buttonRow.appendChild(nextButton);
     navContainer.appendChild(buttonRow);
-    
-    // Insert after contents container
-    const container = document.querySelector('.container');
-    const inputGroup = container.querySelector('.input-group');
-    container.insertBefore(navContainer, inputGroup);
 }
 
 
