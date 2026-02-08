@@ -1,13 +1,12 @@
 '''This script is used to get the list of content/article links from a particular page link.'''
 
-import sys
 import os
+import sys
 
 # add the parent directory to sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# import modules from parent directory 
-from core_scraper import webScraper, soupParser
-
+# import modules from parent directory
+from core_scraper import soupParser, webScraper
 
 # test
 # execute only if the file is run as the main program
@@ -19,7 +18,7 @@ if __name__ == "__main__":
     content_data = []
 
     # get the relevant part of the soup for the page
-    soup = webScraper(chosen_page_url) 
+    soup = webScraper(chosen_page_url)
     news_headers_soup, datetime_soup = soupParser(soup)
 
     # store all content/article links of the page
@@ -29,7 +28,7 @@ if __name__ == "__main__":
             try:
                 header = news_headers_soup[i].string.strip()
             except AttributeError:
-                header = list(news_headers_soup[i].span)[1].strip()      
+                header = list(news_headers_soup[i].span)[1].strip()
             content_data.append({
                 'url': content_url,
                 'header': header
@@ -42,7 +41,7 @@ if __name__ == "__main__":
 # function implementation
 def fetch_content_links(chosen_page_url):
     content_data = []
-    soup = webScraper(chosen_page_url) 
+    soup = webScraper(chosen_page_url)
     news_headers_soup, datetime_soup = soupParser(soup)
     for i in range(len(news_headers_soup)):
         try:
@@ -54,7 +53,7 @@ def fetch_content_links(chosen_page_url):
             except AttributeError:
                 # Handle video-tagged headers
                 header = list(news_headers_soup[i].span)[1].strip()
-            
+
             content_data.append({
                 'url': content_url,
                 'header': header

@@ -1,6 +1,7 @@
 '''This script loads environment variables and system variables.'''
 
 import os
+
 if os.path.exists(".env"):
     from dotenv import load_dotenv
     load_dotenv() # load the environment file

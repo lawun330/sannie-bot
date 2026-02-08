@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 # import libraries
-import time  # this module pauses the process
 import os
+import time  # this module pauses the process
+
 import pandas as pd
 import redis  # this module tracks the scraping progress
 import requests  # this module helps download a web page
@@ -37,7 +38,7 @@ def scrapeCache():
         response = requests.get(cache_url) # try scraping
         error_found = False
         return response
-    except:
+    except Exception:
         error_found = True
         return None
 
@@ -62,7 +63,7 @@ def soupParser(soup):
     # fallback to previous selector if needed
     if not news_headers_soup:
         news_headers_soup = soup.find_all("a", {"class":"focusIndicatorDisplayBlock"}) # previous selector
-    
+
     datetime_soup = soup.find_all("time", {"class":"promo-timestamp"}) # filter datetime
     return news_headers_soup, datetime_soup
 
@@ -85,7 +86,7 @@ def contentScraper(content_url, soup):
                 if (char.lower() in alphabets) or (char in symbols): # do not add non-Burmese characters or symbols
                     continue
                 burmese_content += char # add Burmese characters only
-        except:
+        except Exception:
             pass
     return burmese_content
 
@@ -178,7 +179,7 @@ def exportExcel(df, file_name_string: str):
     try:
         df.to_excel(full_directory, index=False)
         return True
-    except:
+    except Exception:
         print("Error creating a spreadsheet!")
         return False
 
@@ -245,7 +246,7 @@ def scrapeAllTopics(main_url):
             scrapeTopic(topic_url, file_name_string)
             print("The process completes successfully.")
             print()
-        except:
+        except Exception:
             print(f"Error with the current topic url: {topic_url}")
             continue # continue scraping next topic
     print("Hopefully, everything is scraped!")

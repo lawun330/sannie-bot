@@ -34,18 +34,22 @@ DynamoDB stores data as JSON strings in the "data" attribute of each table item.
 '''
 
 # import libraries
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from db import dynamo_helpers
-import redis
-import time
-import os
 import json
+import os
+import time
+
+import redis
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+
+from db import dynamo_helpers
 
 # import custom functions from webscraping modules
-from webscraper.modules import fetch_pages  # B_pages_scraper
-from webscraper.modules import fetch_content_links  # C_content_links_scraper
-from webscraper.modules import get_article  # D_content_or_article_scraper
+from webscraper.modules import (
+    fetch_content_links,  # C_content_links_scraper
+    fetch_pages,  # B_pages_scraper
+    get_article,  # D_content_or_article_scraper
+)
 
 # create FastAPI app
 app = FastAPI()
@@ -83,7 +87,7 @@ async def set_topic(request: Request):
         topic_link = data.get('topic')
         if not topic_link:
             return {"error": "No topic link provided"}
-        
+
         redis_client.setex(redis_javascript_cache_keys[0], CACHE_EXPIRATION, topic_link)
         return {"message": "Topic set successfully"}
     except redis.RedisError as e:
@@ -98,7 +102,7 @@ async def set_page(request: Request):
         page_link = data.get('page')
         if not page_link:
             return {"error": "No page link provided"}
-        
+
         redis_client.setex(redis_javascript_cache_keys[1], CACHE_EXPIRATION, page_link)
         return {"message": "Page set successfully"}
     except redis.RedisError as e:
@@ -113,7 +117,7 @@ async def set_content(request: Request):
         content_link = data.get('content')
         if not content_link:
             return {"error": "No content/article link provided"}
-        
+
         redis_client.setex(redis_javascript_cache_keys[2], CACHE_EXPIRATION, content_link)
         return {"message": "Content/article set successfully"}
     except redis.RedisError as e:

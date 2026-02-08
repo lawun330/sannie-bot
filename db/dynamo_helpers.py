@@ -13,8 +13,9 @@ When data is retrieved from DynamoDB, it is also saved to Redis cache for faster
 '''
 
 # import libraries
-import os
 import json
+import os
+
 
 # optional DynamoDB: only init if all required env vars are set
 def _dynamo_available():

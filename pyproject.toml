@@ -1,14 +1,23 @@
+# --- Ruff: Python linter (runs in CI via .github/workflows/ci.yml) ---
+[tool.ruff]
+
+# skip these folders so CI doesn't fail on notebooks/prototypes
+exclude = ["notebooks", "caching prototypes"]
+
+
 [tool.ruff.lint]
+# which rule groups to enable (style, imports, bugs, modern syntax)
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
     "F",  # pyflakes
-    "I",  # isort
+    "I",  # isort (import order)
     "B",  # flake8-bugbear
     "C4", # flake8-comprehensions
     "UP", # pyupgrade
 ]
 
+# rules to turn off even when selected above
 ignore = [
     "E501",  # line too long, handled by black
     "B008",  # do not perform function calls in argument defaults
@@ -16,12 +25,23 @@ ignore = [
     "W191",  # indentation contains tabs
 ]
 
+
 [tool.ruff.lint.per-file-ignores]
+
+# allow unused imports in __init__.py (re-exports)
 "__init__.py" = ["F401"]
 
+# conftest needs path setup before importing app
+"tests/conftest.py" = ["E402"]
+
+
 [tool.ruff.lint.isort]
+
+# treat these as third-party for import sorting
 known-third-party = ["fastapi", "pydantic"]
 
+
 [tool.ruff.lint.pyupgrade]
-# Preserve types, even if a file imports `from __future__ import annotations`.
+
+# preserve types even if file uses `from __future__ import annotations`
 keep-runtime-typing = true

@@ -2,10 +2,28 @@
 
 # import libraries
 import logging
-from credentials import BOT_TOKEN, BOT_USERNAME
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo, InlineQueryResultArticle, InputTextMessageContent
-from telegram.ext import ApplicationBuilder, CallbackContext, CommandHandler, MessageHandler, ContextTypes, InlineQueryHandler, filters
 import uuid
+
+from credentials import BOT_TOKEN, BOT_USERNAME
+from telegram import (
+	InlineKeyboardButton,
+	InlineKeyboardMarkup,
+	InlineQueryResultArticle,
+	InputTextMessageContent,
+	KeyboardButton,
+	ReplyKeyboardMarkup,
+	Update,
+	WebAppInfo,
+)
+from telegram.ext import (
+	ApplicationBuilder,
+	CallbackContext,
+	CommandHandler,
+	ContextTypes,
+	InlineQueryHandler,
+	MessageHandler,
+	filters,
+)
 
 web_link = "https://lawun330.github.io/sannie-bot/"
 
@@ -81,6 +99,6 @@ if __name__ == "__main__":
 	app.add_handler(keyboard_button_handler)
 	app.add_handler(inline_method_handler)
 	app.add_handler(echo_handler)
-      
+
 	logger.info(f"The bot is listening! Navigate to http://t.me/{BOT_USERNAME} to interact with it!") # debugging print
 	app.run_polling(poll_interval=3) # read input every 3s

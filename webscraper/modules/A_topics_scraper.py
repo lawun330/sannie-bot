@@ -1,12 +1,12 @@
 '''This script is used to get the list of topics urls from the main url of the website.'''
 
-import sys
 import os
+import sys
 
 # add the parent directory to sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# import modules from parent directory 
-from core_scraper import webScraper, getTopicsUrls
+# import modules from parent directory
+from core_scraper import getTopicsUrls, webScraper
 
 # get the main url of the website
 main_url = "https://www.bbc.com/burmese"

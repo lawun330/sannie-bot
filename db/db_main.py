@@ -9,7 +9,6 @@ from db.create_table import create_dynamodb_table
 from db.csv_to_db import upload_csv_to_dynamodb
 from db.query_item import show_custom_lines_from_dynamodb
 
-
 # Run the script from the command line
 if __name__ == "__main__":
     print("")

@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
+# add telegram-bot dir so "app" and "credentials" can be loaded from there
 _root = Path(__file__).resolve().parent.parent
 _bot_dir = _root / "telegram-bot"
 if str(_bot_dir) not in sys.path:
@@ -14,6 +15,7 @@ if str(_bot_dir) not in sys.path:
 
 @pytest.mark.asyncio
 async def test_help_function_replies_with_bbc_or_news():
+    """help_function should call reply_text once with text containing 'BBC' or 'news'."""
     # mock credentials before loading app so BOT_TOKEN/BOT_USERNAME are not required
     creds = MagicMock()
     creds.BOT_TOKEN = "fake"

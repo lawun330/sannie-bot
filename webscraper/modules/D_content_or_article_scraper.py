@@ -1,13 +1,12 @@
 '''This script is used to get the content/article from a particular content/article link.'''
 
-import sys
 import os
+import sys
 
 # add the parent directory to sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# import modules from parent directory 
-from core_scraper import webScraper, contentScraper
-
+# import modules from parent directory
+from core_scraper import contentScraper, webScraper
 
 # test
 # execute only if the file is run as the main program

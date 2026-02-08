@@ -1,12 +1,12 @@
 '''This script is used to get the list of page links from a particular topic url.'''
 
-import sys
 import os
+import sys
 
 # add the parent directory to sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # import modules from parent directory
-from core_scraper import webScraper, getNextPageUrl, getPageLimit
+from core_scraper import getNextPageUrl, getPageLimit, webScraper
 
 # test
 # execute only if the file is run as the main program
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     print(total_pages)
 
     # store the rest of the pages of the topic
-    for i in range(total_pages):
+    for _i in range(total_pages):
         try:
             url = getNextPageUrl(chosen_topic_url, soup)
             soup = webScraper(url)
@@ -42,7 +42,7 @@ def fetch_pages(topic_url):
     list_of_page_urls.append(topic_url)
     soup = webScraper(topic_url)
     total_pages = getPageLimit(soup)
-    for _i in range(5): # total_pages
+    for _i in range(total_pages): # for demonstration 'x' is used # use 'total_pages' in actual implementation
         try:
             url = getNextPageUrl(topic_url, soup)
             soup = webScraper(url)
