@@ -48,9 +48,11 @@ The webscraper can
 
 ## 3. 📁 Files and Directories
 
+- `/.github/workflows` - CI/CD pipeline (Ruff lint, ESLint, pytest on push/PR to main)
+  - `ci.yml` - runs lint (Python + JS) and tests
 - `/caching prototypes` - Development and testing files for caching system
 - `/db` - DynamoDB Local database files and scripts
-- `/docs` - Frontend files for GitHub Pages hosting (more info in `flow.md`)
+- `/docs` - Frontend files for GitHub Pages hosting
 - `/img` - Project images and assets
 - `/notebooks` - Jupyter notebooks for webscraper development and documentation
 - `/spreadsheets` - Exported data (ignored in version control)
@@ -60,6 +62,11 @@ The webscraper can
   - `Dockerfile` - Bot container configuration
   - `Procfile` - Bot deployment configuration (Railway / Render)
   - `requirements.txt` - Bot-specific dependencies
+- `/tests` - Pytest tests
+  - `conftest.py` - shared fixtures (mocked Redis, DynamoDB, scraper; FastAPI client)
+  - `test_api.py` - FastAPI endpoint tests
+  - `test_dynamo_helpers.py` - db.dynamo_helpers tests
+  - `test_telegram_bot.py` - bot handler tests
 - `/webscraper` - Main Python web scraping scripts and modules
   - `/modules` - Modular scraping scripts
 - `api.py` - FastAPI server for web scraping endpoints
@@ -69,8 +76,12 @@ The webscraper can
 - `DEVELOPMENT_GUIDE.md` - Local development setup guide
 - `DEPLOYMENT_GUIDE.md` - Production deployment guide
 - `Procfile` - FastAPI app deployment configuration (Railway / Render)
-- `pyproject.toml` - Project configuration and dependencies
-- `requirements.txt` - All dependencies
+- `pyproject.toml` - Ruff linter configuration
+- `pytest.ini` - Pytest configuration
+- `requirements.txt` - Runtime dependencies
+- `requirements-dev.txt` - Development and test dependencies
+- `.eslintrc.json` - ESLint configuration for JavaScript
+- `.eslintignore` - Paths ignored by ESLint
 
 ***
 
