@@ -141,7 +141,7 @@ async function navigateToPage(newIndex) {
         
         // Update stored index
         currentPageIndex = newIndex;
-        sessionStorage.setItem('currentPageIndex', newIndex.toString());
+        safeSetStorageItem('sessionStorage', 'currentPageIndex', newIndex.toString());
         
         // Update page title
         updatePageTitle(`စာမျက်နှာ ${newIndex + 1}`);
@@ -185,8 +185,8 @@ function formatPageUrl(pageUrl) {
 async function initializePage() {
     try {
         // Load pages list and current index from sessionStorage for navigation
-        const storedPagesList = sessionStorage.getItem('pagesList');
-        const storedPageIndex = sessionStorage.getItem('currentPageIndex');
+        const storedPagesList = safeGetStorageItem('sessionStorage', 'pagesList');
+        const storedPageIndex = safeGetStorageItem('sessionStorage', 'currentPageIndex');
         
         if (storedPagesList) {
             pagesList = JSON.parse(storedPagesList);

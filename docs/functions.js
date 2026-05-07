@@ -16,11 +16,21 @@
 
 // Initialize Telegram Web App and expand viewport if running in Telegram
 (function() {
-    if (window.Telegram && window.Telegram.WebApp) {
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand(); // expand the web app to fill available space
-        tg.enableClosingConfirmation(); // optional: confirm before closing
+    try {
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            if (typeof tg.ready === 'function') {
+                tg.ready();
+            }
+            if (typeof tg.expand === 'function') {
+                tg.expand(); // expand the web app to fill available space
+            }
+            if (typeof tg.enableClosingConfirmation === 'function') {
+                tg.enableClosingConfirmation(); // optional: confirm before closing
+            }
+        }
+    } catch (error) {
+        console.warn('Telegram WebApp initialization failed:', error);
     }
 })();
 
@@ -42,6 +52,46 @@ const API_BASE_URL = (() => {
 // Used in loading.js and throughout error handling
 function showError(message) {
     console.error(message);
+}
+
+
+// Function to get storage - globally accessible
+// Used in loading.js and pages.js and contents.js
+function getStorage(storageName) {
+    try {
+        return window[storageName] || null;
+    } catch (error) {
+        return null;
+    }
+}
+
+function safeSetStorageItem(storageName, key, value) {
+    try {
+        const storage = getStorage(storageName);
+        if (!storage) {
+            return false;
+        }
+
+        storage.setItem(key, value);
+        return true;
+    } catch (error) {
+        console.warn(`Unable to write ${storageName}.${key}:`, error);
+        return false;
+    }
+}
+
+function safeGetStorageItem(storageName, key) {
+    try {
+        const storage = getStorage(storageName);
+        if (!storage) {
+            return null;
+        }
+
+        return storage.getItem(key);
+    } catch (error) {
+        console.warn(`Unable to read ${storageName}.${key}:`, error);
+        return null;
+    }
 }
 
 

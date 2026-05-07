@@ -122,8 +122,8 @@ async function handleViewButtonClick(page, pageTitle, pageIndex) {
         
         // Store pages list and current index for navigation
         const pagesData = await fetchItem('pages');
-        sessionStorage.setItem('pagesList', JSON.stringify(pagesData));
-        sessionStorage.setItem('currentPageIndex', pageIndex.toString());
+        safeSetStorageItem('sessionStorage', 'pagesList', JSON.stringify(pagesData));
+        safeSetStorageItem('sessionStorage', 'currentPageIndex', pageIndex.toString());
         
         console.log('Redirecting to loading.html...');
         redirectToLoading(pageTitle);

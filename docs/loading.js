@@ -97,7 +97,7 @@ function fetchItem(endpoint) {
         .then(data => {
             console.log("Data is available now!");
             // Store the fetched data and redirect
-            localStorage.setItem('fetchedData', JSON.stringify(data));
+            safeSetStorageItem('localStorage', 'fetchedData', JSON.stringify(data));
             
             // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
