@@ -34,6 +34,7 @@ const API_BASE_URL = (() => {
     // If running on GitHub Pages (production), set this to the deployed API URL (Railway or Render)
     // e.g. https://app.onrender.com or https://app.up.railway.app
     return 'https://sannie-bot-backend-fastapi.onrender.com';  // ########## UPDATE HERE ##########
+    // return 'https://web-production-9231.up.railway.app'
 })();
 
 

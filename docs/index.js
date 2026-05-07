@@ -211,10 +211,12 @@ async function handleReadLink() {
 function handleBackNavigation() {
     // Add slide-right animation class
     const container = document.querySelector('.container');
-    container.classList.add('slide-right');
+    if (container) {
+        container.classList.add('slide-right');
+    }
     
     // Navigate back to main page after animation
     setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = 'index.html';
     }, 300); // Match this with the CSS transition duration
 }
