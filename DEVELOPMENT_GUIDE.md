@@ -12,6 +12,19 @@ Ensure the required software is installed:
 
 See `requirements.txt` for Python dependencies.
 
+## Environment Variables
+```.env
+REDIS_URL=redis://default:password@region.upstash.io:6379
+AWS_ACCESS_KEY=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_REGION=ap-southeast-1
+DYNAMODB_TABLE_PAGES=sannie-pages
+DYNAMODB_TABLE_CONTENTS=sannie-contents
+DYNAMODB_TABLE_ARTICLES=sannie-articles
+BOT_TOKEN=your_telegram_bot_token
+BOT_USERNAME=your_bot_username
+```
+
 ***
 
 ## Method A: Without Docker

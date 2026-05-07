@@ -138,7 +138,7 @@ Choose one of the following platforms to deploy the FastAPI backend:
 
 Go to FastAPI service settings → Environment Variables and add:
 
-```console
+```.env
 REDIS_URL=redis://default:password@redis.railway.internal:6379
 AWS_ACCESS_KEY=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
@@ -179,7 +179,7 @@ DYNAMODB_TABLE_ARTICLES=sannie-articles
 
 Go to FastAPI service settings → Environment Variables and add:
 
-```console
+```.env
 REDIS_URL=redis://default:password@region.upstash.io:6379
 AWS_ACCESS_KEY=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
@@ -251,7 +251,7 @@ The Telegram bot must be deployed on Railway only, as Render does not offer free
 
 Go to Telegram Bot service settings → Environment Variables and add:
 
-```console
+```.env
 BOT_TOKEN=your_telegram_bot_token
 BOT_USERNAME=your_bot_username
 ```
