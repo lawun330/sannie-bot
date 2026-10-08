@@ -1,17 +1,18 @@
 # Sannie Bot: BBC Burmese News on Telegram
 
-This project is a Telegram web app bot called "Sannie." Sannie crawls the BBC Burmese website to display news content, allowing Telegram users to read the news without leaving the app. The entire user interface is displayed in Burmese language, providing a native experience for Burmese-speaking users.
+<img align="left" src="./img/bot_icon2.jpg" width="250" height="250" alt="profile">
+<br>
+Hi! I'm Sannie, the journalist 👩🏻‍💼, your Telegram news presenter bot. To get started, find me on Telegram at:
 
-**NOTE**: The Telegram app on Linux may not display the web page.
-
-## 1. 🚀 User Manual
-
-A Telegram account is required.
-- **Direct Link**: Chat the [bot](http://t.me/sannie_journalist_bot) directly
-- **Search Method**: Find the bot in Telegram's search bar:
-```console
+```
 @sannie_journalist_bot 
 ```
+Sannie crawls the BBC Burmese website to display news content, allowing Telegram users to read the news without leaving the app. The entire user interface is displayed in Burmese language, providing a native experience for Burmese-speaking users.
+<br clear="left">
+
+**NOTE**: Web pages may not render properly in Telegram for Linux.
+
+## 1. 🚀 User Manual
 
 ### 1.1. Bot Features
 
