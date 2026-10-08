@@ -7,10 +7,10 @@ This project is a Telegram web app bot called "Sannie." Sannie crawls the BBC Bu
 ## 1. 🚀 User Manual
 
 A Telegram account is required.
-- **Direct Link**: Chat the [bot](http://t.me/presenter_sannie_bot) directly
+- **Direct Link**: Chat the [bot](http://t.me/sannie_journalist_bot) directly
 - **Search Method**: Find the bot in Telegram's search bar:
 ```console
-@presenter_sannie_bot
+@sannie_journalist_bot 
 ```
 
 ### 1.1. Bot Features
@@ -104,6 +104,15 @@ The webscraper can
 - **[CONTROL_FLOW.md](CONTROL_FLOW.md)** - Control flow documentation and user journey
 - **[DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)** - Local development setup and commands
 - **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Production deployment instructions (Railway/Render)
+
+***
+
+## Currently Deployed
+
+- **Telegram bot**: Railway
+- **FastAPI**: Render
+- **Database**: AWS DyanmoDB
+- **Redis cache**: Upstash
 
 ***
 
